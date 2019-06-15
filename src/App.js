@@ -1,48 +1,68 @@
-import React, { Component } from 'react';
-import { Menu } from 'semantic-ui-react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import Home from  './pages/Home/Home';
-import Page1 from './pages/Pages1/Page1';
-import Page2 from './pages/Pages2/Page2';
+import React, { Component } from 'react'
+import { Menu } from 'semantic-ui-react'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import Home from './pages/Home/Home'
+import Page1 from './pages/Pages1/Page1'
+import Page2 from './pages/Pages2/Page2'
 
+const routes = [
+  {
+    path: '/',
+    component: Home,
+    name: 'home',
+    label: 'Home'
+  },
+  {
+    path: '/page1',
+    component: Page1,
+    name: 'page1',
+    label: 'Page 1'
+  },
+  {
+    path: '/page2',
+    component: Page2,
+    name: 'page2',
+    label: 'Page 2'
+  }
+]
 
 export default class App extends Component {
+  state = {}
 
-	constructor(props) {
-		super(props);
-		this.state = {}
-	}
+  changeActiveRoute(name) {
+    this.setState({ activeItem: name })
+  }
 
-	handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  isActive(route) {
+    return (
+      this.state.activeItem === route.name ||
+      window.location.pathname === route.path
+    )
+  }
 
-	render() {
+  render() {
+    return (
+      <div>
+        <Router>
+          <Menu>
+            {routes.map(route => (
+              <Link to={route.path}>
+                <Menu.Item
+                  name={route.name}
+                  active={this.isActive(route)}
+                  onClick={(e, { name }) => this.changeActiveRoute(name)}
+                >
+                  {route.label}
+                </Menu.Item>
+              </Link>
+            ))}
+          </Menu>
 
-		const { activeItem } = this.state
-
-		return (
-			<div>
-      <Router>
-        
-      <Menu>
-          <Menu.Item name='home' active={activeItem === 'home'} onClick={this.handleItemClick}>
-          <Link to="/">Home</Link>
-          </Menu.Item>
-          
-          <Menu.Item name='page1' active={activeItem === 'page1'} onClick={this.handleItemClick}>
-          <Link to="/page1">Page1</Link>
-          </Menu.Item>
-          
-          <Menu.Item name='page2' active={activeItem === 'page2'} onClick={this.handleItemClick}>
-          <Link to="/page2">Page2</Link>
-          </Menu.Item>  
-        </Menu>
-        
-        <Route path="/" exact component={Home} />
-        <Route path="/page1" component={Page1} />
-        <Route path="/page2" component={Page2} />
-        
-            </Router>
-			</div>
-		)
+          {routes.map(route => (
+            <Route path={route.path} exact component={route.component} />
+          ))}
+        </Router>
+      </div>
+    )
   }
 }
