@@ -29,7 +29,7 @@ export default class InputJumlah extends Component {
         />
 
         {this.isTouched() ? (
-          <>
+          <Button.Group style={styles.buttonGroup}>
             <Button
               primary
               onClick={() => this.props.onSubmit(this.state.value)}
@@ -39,9 +39,15 @@ export default class InputJumlah extends Component {
             <Button color="red" onClick={() => this.resetValue()}>
               Batal
             </Button>
-          </>
+          </Button.Group>
         ) : null}
       </>
     )
+  }
+}
+
+const styles = {
+  buttonGroup: {
+    marginTop: 15
   }
 }

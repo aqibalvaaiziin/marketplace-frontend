@@ -39,7 +39,7 @@ export default class Home extends Component {
         <Container>
           {this.state.keranjang.length ? (
             <>
-              <Table celled>
+              <Table celled fixed>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>No</Table.HeaderCell>
