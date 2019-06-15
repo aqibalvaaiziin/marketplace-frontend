@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Page1 from './pages/Pages1/Page1'
 import Page2 from './pages/Pages2/Page2'
+import Keranjang from './pages/Keranjang'
 
 const routes = [
   {
@@ -23,6 +24,12 @@ const routes = [
     component: Page2,
     name: 'page2',
     label: 'Page 2'
+  },
+  {
+    path: '/keranjang',
+    component: Keranjang,
+    name: 'keranjang',
+    label: 'Keranjang'
   }
 ]
 
