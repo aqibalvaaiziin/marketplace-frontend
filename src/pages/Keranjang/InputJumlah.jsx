@@ -28,7 +28,7 @@ export default class InputJumlah extends Component {
           min="1"
         />
 
-        {this.isTouched() ? (
+        {this.isTouched() && (
           <Button.Group style={styles.buttonGroup}>
             <Button
               primary
@@ -40,7 +40,7 @@ export default class InputJumlah extends Component {
               Batal
             </Button>
           </Button.Group>
-        ) : null}
+        )}
       </>
     )
   }
