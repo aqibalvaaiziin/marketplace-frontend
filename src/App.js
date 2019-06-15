@@ -5,6 +5,7 @@ import Home from "./pages/Home/Home";
 import Page1 from "./pages/Pages1/Page1";
 import Page2 from "./pages/Pages2/Page2";
 import DetailProduct from "./pages/DetailProduct/DetailProduct";
+import Keranjang from './pages/Keranjang'
 
 const routes = [
   {
@@ -22,8 +23,14 @@ const routes = [
   {
     path: "/page2",
     component: Page2,
-    name: "page2",
-    label: "Page 2"
+    name: 'page2',
+    label: 'Page 2'
+  },
+  {
+    path: '/keranjang',
+    component: Keranjang,
+    name: 'keranjang',
+    label: 'Keranjang'
   },
   {
     path: "/detail-produk",
