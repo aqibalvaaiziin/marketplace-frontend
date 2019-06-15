@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Menu } from "semantic-ui-react";
+import { Menu,Icon } from "semantic-ui-react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Page1 from "./pages/Pages1/Page1";
@@ -37,7 +37,7 @@ const routes = [
     component: DetailProduct,
     name: "detailProduk",
     label: "Detail Produk"
-  }
+  },
 ];
 
 export default class App extends Component {
@@ -72,6 +72,19 @@ export default class App extends Component {
                 </Menu.Item>
               </Link>
             ))}
+            {
+              routes.hide ?
+              false
+              : true
+            }
+          <Menu.Menu position='right'>
+          <Link to ="/keranjang">
+            <Menu.Item>
+              <Icon name="cart" />
+            </Menu.Item>
+          </Link>
+        </Menu.Menu>
+            
           </Menu>
           {routes.map(route => (
             <Route path={route.path} exact component={route.component} />
