@@ -7,26 +7,26 @@ import {
   Segment,
   Button,
   Icon,
-  Input
+  Input,
 } from 'semantic-ui-react'
 
 class DetailProduk extends Component {
   state = {
     produk: this.props.location.state,
-    jumlah: 1
+    jumlah: 1,
   }
 
   changeJumlah(jumlah) {
     this.setState({ jumlah })
   }
 
-  addToCart() {
+  addKeranjang() {
     axios
       .post('https://marketplace-express.herokuapp.com/keranjang', {
         id_produk: this.state.produk.id_produk,
-        jumlah: this.state.jumlah
+        jumlah: this.state.jumlah,
       })
-      .then(response => this.props.history.push('/keranjang'))
+      .then((response) => this.props.history.push('/keranjang'))
   }
 
   render() {
@@ -55,7 +55,7 @@ class DetailProduk extends Component {
                   min="1"
                 />
               </p>
-              <Button primary fluid onClick={() => this.addToCart()}>
+              <Button primary fluid onClick={() => this.addKeranjang()}>
                 <Icon name="shopping cart" />
                 Beli
               </Button>

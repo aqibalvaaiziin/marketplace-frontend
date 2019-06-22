@@ -3,7 +3,7 @@ import { Input, Button } from 'semantic-ui-react'
 
 export default class InputJumlah extends Component {
   state = {
-    value: this.props.initialValue
+    value: this.props.initialValue,
   }
 
   changeValue(value) {
@@ -32,8 +32,7 @@ export default class InputJumlah extends Component {
           <Button.Group style={styles.buttonGroup}>
             <Button
               primary
-              onClick={() => this.props.onSubmit(this.state.value)}
-            >
+              onClick={() => this.props.onSubmit(this.state.value)}>
               Simpan
             </Button>
             <Button color="red" onClick={() => this.resetValue()}>
@@ -48,6 +47,6 @@ export default class InputJumlah extends Component {
 
 const styles = {
   buttonGroup: {
-    marginTop: 15
-  }
+    marginTop: 15,
+  },
 }

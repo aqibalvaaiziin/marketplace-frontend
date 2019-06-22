@@ -10,22 +10,22 @@ const routes = [
     path: '/',
     component: Beranda,
     name: 'beranda',
-    label: 'Beranda'
+    label: 'Beranda',
   },
   {
     path: '/keranjang',
     component: Keranjang,
     name: 'keranjang',
     label: 'Keranjang',
-    hide: true
+    hide: true,
   },
   {
     path: '/detail-produk',
     component: DetailProduk,
     name: 'detailProduk',
     label: 'Detail Produk',
-    hide: true
-  }
+    hide: true,
+  },
 ]
 
 export default class App extends Component {
@@ -33,7 +33,7 @@ export default class App extends Component {
 
   changeActiveRoute(name) {
     this.setState({
-      activeItem: name
+      activeItem: name,
     })
   }
 
@@ -50,18 +50,17 @@ export default class App extends Component {
         <Router>
           <Menu fixed="top">
             {routes.map(
-              route =>
+              (route) =>
                 !route.hide && (
                   <Link to={route.path}>
                     <Menu.Item
                       name={route.name}
                       active={this.isActive(route)}
-                      onClick={(e, { name }) => this.changeActiveRoute(name)}
-                    >
+                      onClick={(e, { name }) => this.changeActiveRoute(name)}>
                       {route.label}
                     </Menu.Item>
                   </Link>
-                )
+                ),
             )}
             <Menu.Menu position="right">
               <Link to="/keranjang">
@@ -73,7 +72,7 @@ export default class App extends Component {
           </Menu>
 
           <div style={styles.pageContainer}>
-            {routes.map(route => (
+            {routes.map((route) => (
               <Route path={route.path} exact component={route.component} />
             ))}
           </div>
@@ -85,6 +84,6 @@ export default class App extends Component {
 
 const styles = {
   pageContainer: {
-    marginTop: 50
-  }
+    marginTop: 50,
+  },
 }
