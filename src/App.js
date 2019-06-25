@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Beranda from './pages/Beranda'
 import DetailProduk from './pages/DetailProduk'
 import Keranjang from './pages/Keranjang'
+import LogTransaksi from './pages/LogTransaksi/LogTransaksi';
+import DetailTransaksi from './pages/LogTransaksi/DetailTransaksi';
 
 const routes = [
   {
@@ -26,6 +28,20 @@ const routes = [
     label: 'Detail Produk',
     hide: true,
   },
+  {
+    path: '/transaksi',
+    component: LogTransaksi,
+    name: 'logTransaksi',
+    label: 'Log Transaksi',
+    hide: true,
+  },
+  {
+    path: '/transaksi/detail',
+    component: DetailTransaksi,
+    name: 'detailTransaksi',
+    label: 'Detail Transaksi',
+    hide: true,
+  }
 ]
 
 export default class App extends Component {
