@@ -5,7 +5,7 @@ import InputJumlah from './InputJumlah'
 
 export default class Home extends Component {
   state = {
-    keranjang: []
+    keranjang: [],
   }
 
   componentDidMount() {
@@ -15,21 +15,21 @@ export default class Home extends Component {
   getKeranjang() {
     axios
       .get('https://marketplace-express.herokuapp.com/keranjang')
-      .then(response => this.setState({ keranjang: response.data }))
+      .then((response) => this.setState({ keranjang: response.data }))
   }
 
   changeJumlah(id_keranjang, jumlah) {
     axios
       .put(
         `https://marketplace-express.herokuapp.com/keranjang/${id_keranjang}`,
-        { jumlah }
+        { jumlah },
       )
       .then(() => this.getKeranjang())
   }
 
   getTotal() {
     return this.state.keranjang
-      .map(item => item.produk.harga * item.jumlah)
+      .map((item) => item.produk.harga * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
 
@@ -63,7 +63,7 @@ export default class Home extends Component {
                     <Table.Cell>
                       <InputJumlah
                         initialValue={item.jumlah}
-                        onSubmit={value =>
+                        onSubmit={(value) =>
                           this.changeJumlah(item.id_keranjang, value)
                         }
                       />
