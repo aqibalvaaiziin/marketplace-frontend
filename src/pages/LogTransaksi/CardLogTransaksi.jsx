@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Container, Grid, Modal, Image, Button } from 'semantic-ui-react'
+import { Card, Container, Grid, Image } from 'semantic-ui-react'
 
 export default class CardLogTransaksi extends Component {
   render() {
@@ -13,15 +13,15 @@ export default class CardLogTransaksi extends Component {
             <Grid divided>
               <Grid.Row>
                 <Grid.Column width={9}>
-                  <Card.Description>kota asal</Card.Description>
-                  <Card.Description>tujuan</Card.Description>
-                  <Card.Description>detail alamat</Card.Description>
-                  <Card.Description>tanggal</Card.Description>
+                  <Card.Description>Kota Asal : {this.props.kotaAsal}</Card.Description>
+                  <Card.Description>Kota Tujuan : {this.props.tujuan}</Card.Description>
+                  <Card.Description>Alamat Tujuan : {this.props.detailAlamat}</Card.Description>
+                  <Card.Description>Tanggal Transaksi : {this.props.tanggal}</Card.Description>
                 </Grid.Column>
                 <Grid.Column width={5}>
-                  <Card.Description>total berat</Card.Description>
-                  <Card.Description>total harga</Card.Description>
-                  <Card.Description>ongkir</Card.Description>
+                  <Card.Description>Total Berat : {this.props.totalBerat}</Card.Description>
+                  <Card.Description>Total Harga : {this.props.totalHarga}</Card.Description>
+                  <Card.Description>Ongkos Kirim :{this.props.ongkir}</Card.Description>
                 </Grid.Column>
                 <Grid.Column width={2}>
                   <Image
