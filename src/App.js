@@ -33,7 +33,7 @@ const routes = [
     component: LogTransaksi,
     name: 'logTransaksi',
     label: 'Log Transaksi',
-    hide: true,
+    hide: false,
   },
   {
     path: '/transaksi/detail',
