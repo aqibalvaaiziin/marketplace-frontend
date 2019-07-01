@@ -6,22 +6,27 @@ import {
   Container,
   Input,
   TableCell,
+  Button,
+  Modal,
+  Image
 } from 'semantic-ui-react'
 import axios from 'axios'
 
 export default class DetailTransaksi extends Component {
   state = {
     detailTransaksi: [],
-    image: {
-      preview: '',
-    },
+    fileSelected: null,
+    open: false
   }
+
+  show = dimmer => () => this.setState({ dimmer, open: true })
+  close = () => this.setState({ open: false })
 
   componentDidMount() {
     axios
       .get(
         `https://marketplace-express.herokuapp.com/transaksi/${
-          this.props.location.state
+        this.props.location.state
         }/detail`,
       )
       .then((res) => {
@@ -31,18 +36,36 @@ export default class DetailTransaksi extends Component {
       })
   }
 
-  changeImage(file) {
-    URL.revokeObjectURL(this.state.preview)
-    this.setState({ preview: URL.createObjectURL(file) })
+  fileSelectHandler = (event) => {
+    let files = event.target.files;
+    let reader = new FileReader();
+    reader.readAsDataURL(files[0])
+    reader.onload = (event) => {
+      this.setState({
+        fileSelected: event.target.result
+      })
+    }
   }
 
-  encodeImageFileAsURL(element) {
-    let file = element.files[0]
-    let reader = new FileReader()
-    reader.readAsDataURL(file)
+  uploadFileHandler = () => {
+    axios.put(`https://marketplace-express.herokuapp.com/transaksi/${this.props.location.state}`, {
+      bukti_bayar: this.state.fileSelected
+    })
+      .then((res) => {
+        console.log('data : ', res.data)
+      })
+      .catch(error => {
+        console.log('error :', error)
+      })
+    this.close()
   }
+
+
 
   render() {
+
+    const { open, dimmer } = this.state
+
     return (
       <Container>
         <Header as="h1" icon textAlign="center">
@@ -51,11 +74,13 @@ export default class DetailTransaksi extends Component {
           <Header.Content>{this.props.location.state}</Header.Content>
         </Header>
 
+
         <Input
           type="file"
-          onChange={(event) => this.changeImage(event.target.files[0])}
-          label="Upload Bukti Transaksi"
+          onChange={this.fileSelectHandler}
         />
+        <br /><br />
+        <Button onClick={this.show('blurring')}>View & upload</Button>
 
         <Table singleLine>
           <Table.Header>
@@ -78,7 +103,31 @@ export default class DetailTransaksi extends Component {
             })}
           </Table.Body>
         </Table>
+
+        <Modal dimmer={dimmer} open={open} onClose={this.close}>
+          <Modal.Header>Bukti Pembayaran <Icon name="times" style={styles.timesFolated} onClick={this.close} /></Modal.Header>
+          <Modal.Content>
+            <Image centered size='large' src={this.state.fileSelected} />
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              positive
+              icon='checkmark'
+              labelPosition='right'
+              content="Upload Gambar"
+              onClick={this.uploadFileHandler}
+            />
+          </Modal.Actions>
+        </Modal>
+
       </Container>
     )
+  }
+}
+
+const styles = {
+  timesFolated: {
+    marginLeft: '78%',
+    cursor: 'pointer'
   }
 }

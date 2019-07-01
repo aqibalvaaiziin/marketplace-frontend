@@ -41,6 +41,7 @@ export default class LogTransaksi extends Component {
                   totalBerat={transaksi.total_berat}
                   totalHarga = {transaksi.total_harga}
                   ongkir = {transaksi.ongkir}
+                  buktiBayar = {transaksi.bukti_bayar}
                 />
               </div>
             </Link>
