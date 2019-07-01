@@ -28,7 +28,7 @@ export default class LogTransaksi extends Component {
           let year = dateTime.getFullYear()
           let hour = dateTime.getHours()
           let minutes = dateTime.getMinutes()
- 
+
           return (
             <Link to={{ pathname: '/transaksi/detail', state: transaksi.id_transaksi }}>
               <div style={styles.marginCard}>

@@ -15,11 +15,22 @@ import axios from 'axios'
 export default class DetailTransaksi extends Component {
   state = {
     detailTransaksi: [],
+    open: false,
     fileSelected: null,
-    open: false
+    visible: false
   }
 
-  show = dimmer => () => this.setState({ dimmer, open: true })
+  checkValue = () => {
+    if (this.state.fileSelected == null) {
+      this.setState({
+        visible: !this.state.visible
+      })
+    }
+  }
+
+  show = dimmer => () => {
+    this.setState({ dimmer, open: true })
+  }
   close = () => this.setState({ open: false })
 
   componentDidMount() {
@@ -45,6 +56,7 @@ export default class DetailTransaksi extends Component {
         fileSelected: event.target.result
       })
     }
+    this.checkValue()
   }
 
   uploadFileHandler = () => {
@@ -76,11 +88,16 @@ export default class DetailTransaksi extends Component {
 
 
         <Input
+          label="Pilih File"
           type="file"
           onChange={this.fileSelectHandler}
         />
         <br /><br />
-        <Button onClick={this.show('blurring')}>View & upload</Button>
+        {
+          this.state.visible
+          &&
+          <Button onClick={this.show('blurring')}>View & upload</Button>
+        }
 
         <Table singleLine>
           <Table.Header>
@@ -93,7 +110,7 @@ export default class DetailTransaksi extends Component {
           <Table.Body>
             {this.state.detailTransaksi.map((dt) => {
               return (
-                <Table.Row>
+                <Table.Row key={dt.id_produk}>
                   <TableCell>{dt.produk.nama}</TableCell>
                   <TableCell>{dt.jumlah}</TableCell>
                   <TableCell>{dt.berat}</TableCell>
@@ -129,5 +146,8 @@ const styles = {
   timesFolated: {
     marginLeft: '78%',
     cursor: 'pointer'
+  },
+  inputStyle: {
+    display: 'none'
   }
 }
