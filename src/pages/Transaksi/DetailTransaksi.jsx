@@ -32,9 +32,9 @@ export default class DetailTransaksi extends Component {
       })
   }
 
-  fileSelectHandler(files) {
+  changeFile(file) {
     let reader = new FileReader()
-    reader.readAsDataURL(files[0])
+    reader.readAsDataURL(file)
     reader.onload = (event) => {
       this.setState({
         fileSelected: event.target.result,
@@ -52,7 +52,10 @@ export default class DetailTransaksi extends Component {
           bukti_bayar: this.state.fileSelected,
         },
       )
-      .then((res) => this.setState({ fileSelected: null }))
+      .then((res) => {
+        document.getElementById('input-bukti').value = ''
+        this.setState({ fileSelected: null })
+      })
       .catch((err) => console.log(err))
   }
 
@@ -67,9 +70,10 @@ export default class DetailTransaksi extends Component {
           <Header.Content>{this.props.location.state}</Header.Content>
         </Header>
         <Input
+          id="input-bukti"
           label="Pilih File"
           type="file"
-          onChange={(event) => this.fileSelectHandler(event.target.files)}
+          onChange={(event) => this.changeFile(event.target.files[0])}
         />
         &nbsp; &nbsp;
         {this.state.fileSelected && (
