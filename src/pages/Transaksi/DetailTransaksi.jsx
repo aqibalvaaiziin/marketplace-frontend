@@ -8,36 +8,21 @@ import {
   TableCell,
   Button,
   Modal,
-  Image
+  Image,
 } from 'semantic-ui-react'
 import axios from 'axios'
 
 export default class DetailTransaksi extends Component {
   state = {
     detailTransaksi: [],
-    open: false,
     fileSelected: null,
-    visible: false
   }
-
-  checkValue = () => {
-    if (this.state.fileSelected == null) {
-      this.setState({
-        visible: !this.state.visible
-      })
-    }
-  }
-
-  show = dimmer => () => {
-    this.setState({ dimmer, open: true })
-  }
-  close = () => this.setState({ open: false })
 
   componentDidMount() {
     axios
       .get(
         `https://marketplace-express.herokuapp.com/transaksi/${
-        this.props.location.state
+          this.props.location.state
         }/detail`,
       )
       .then((res) => {
@@ -47,36 +32,32 @@ export default class DetailTransaksi extends Component {
       })
   }
 
-  fileSelectHandler = (event) => {
-    let files = event.target.files;
-    let reader = new FileReader();
+  fileSelectHandler(files) {
+    let reader = new FileReader()
     reader.readAsDataURL(files[0])
     reader.onload = (event) => {
       this.setState({
-        fileSelected: event.target.result
+        fileSelected: event.target.result,
       })
     }
-    this.checkValue()
   }
 
-  uploadFileHandler = () => {
-    axios.put(`https://marketplace-express.herokuapp.com/transaksi/${this.props.location.state}`, {
-      bukti_bayar: this.state.fileSelected
-    })
-      .then((res) => {
-        console.log('data : ', res.data)
-      })
-      .catch(error => {
-        console.log('error :', error)
-      })
-    this.close()
+  uploadFileHandler() {
+    axios
+      .put(
+        `https://marketplace-express.herokuapp.com/transaksi/${
+          this.props.location.state
+        }`,
+        {
+          bukti_bayar: this.state.fileSelected,
+        },
+      )
+      .then((res) => this.setState({ fileSelected: null }))
+      .catch((err) => console.log(err))
   }
-
-
 
   render() {
-
-    const { open, dimmer } = this.state
+    const { open } = this.state
 
     return (
       <Container>
@@ -85,20 +66,17 @@ export default class DetailTransaksi extends Component {
           <Header.Content>Id Transaksi</Header.Content>
           <Header.Content>{this.props.location.state}</Header.Content>
         </Header>
-
-
         <Input
           label="Pilih File"
           type="file"
-          onChange={this.fileSelectHandler}
+          onChange={(event) => this.fileSelectHandler(event.target.files)}
         />
-        <br /><br />
-        {
-          this.state.visible
-          &&
-          <Button onClick={this.show('blurring')}>View & upload</Button>
-        }
-
+        &nbsp; &nbsp;
+        {this.state.fileSelected && (
+          <Button primary onClick={() => this.uploadFileHandler()}>
+            Upload
+          </Button>
+        )}
         <Table singleLine>
           <Table.Header>
             <Table.HeaderCell>Nama Produk</Table.HeaderCell>
@@ -120,23 +98,6 @@ export default class DetailTransaksi extends Component {
             })}
           </Table.Body>
         </Table>
-
-        <Modal dimmer={dimmer} open={open} onClose={this.close}>
-          <Modal.Header>Bukti Pembayaran <Icon name="times" style={styles.timesFolated} onClick={this.close} /></Modal.Header>
-          <Modal.Content>
-            <Image centered size='large' src={this.state.fileSelected} />
-          </Modal.Content>
-          <Modal.Actions>
-            <Button
-              positive
-              icon='checkmark'
-              labelPosition='right'
-              content="Upload Gambar"
-              onClick={this.uploadFileHandler}
-            />
-          </Modal.Actions>
-        </Modal>
-
       </Container>
     )
   }
@@ -145,9 +106,9 @@ export default class DetailTransaksi extends Component {
 const styles = {
   timesFolated: {
     marginLeft: '78%',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   inputStyle: {
-    display: 'none'
-  }
+    display: 'none',
+  },
 }

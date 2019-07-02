@@ -13,7 +13,7 @@ export default class LogTransaksi extends Component {
       .get('https://marketplace-express.herokuapp.com/transaksi')
       .then((res) => {
         this.setState({
-          transaksi: res.data
+          transaksi: res.data,
         })
       })
   }
@@ -30,7 +30,11 @@ export default class LogTransaksi extends Component {
           let minutes = dateTime.getMinutes()
 
           return (
-            <Link to={{ pathname: '/transaksi/detail', state: transaksi.id_transaksi }}>
+            <Link
+              to={{
+                pathname: '/transaksi/detail',
+                state: transaksi.id_transaksi,
+              }}>
               <div style={styles.marginCard}>
                 <CardLogTransaksi
                   key={transaksi.id_transaksi}
@@ -39,9 +43,9 @@ export default class LogTransaksi extends Component {
                   detailAlamat={transaksi.detail_alamat}
                   tanggal={`${date}-${month}-${year} ${hour}:${minutes}`}
                   totalBerat={transaksi.total_berat}
-                  totalHarga = {transaksi.total_harga}
-                  ongkir = {transaksi.ongkir}
-                  buktiBayar = {transaksi.bukti_bayar}
+                  totalHarga={transaksi.total_harga}
+                  ongkir={transaksi.ongkir}
+                  buktiBayar={transaksi.bukti_bayar}
                 />
               </div>
             </Link>
