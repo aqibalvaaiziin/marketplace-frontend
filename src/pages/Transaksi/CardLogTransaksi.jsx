@@ -26,7 +26,7 @@ export default class CardLogTransaksi extends Component {
                 <Grid.Column width={2}>
                   <Image
                     style={styles.imageFloat}
-                    src="https://react.semantic-ui.com/images/avatar/large/rachel.png"
+                    src={this.props.buktiBayar}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -44,9 +44,7 @@ const styles = {
     boxShadow: '2px 3px 6px 3px #ccc',
   },
   imageFloat: {
-    width: '60%',
-    position: 'relative',
-    left: '20%',
-    trasnform: 'translateX(-20%)',
+    width: '90%',
+    marginTop: '5px'
   },
 }

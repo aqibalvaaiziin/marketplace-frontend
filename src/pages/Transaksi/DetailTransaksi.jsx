@@ -6,15 +6,16 @@ import {
   Container,
   Input,
   TableCell,
+  Button,
+  Modal,
+  Image,
 } from 'semantic-ui-react'
 import axios from 'axios'
 
 export default class DetailTransaksi extends Component {
   state = {
     detailTransaksi: [],
-    image: {
-      preview: '',
-    },
+    fileSelected: null,
   }
 
   componentDidMount() {
@@ -31,18 +32,36 @@ export default class DetailTransaksi extends Component {
       })
   }
 
-  changeImage(file) {
-    URL.revokeObjectURL(this.state.preview)
-    this.setState({ preview: URL.createObjectURL(file) })
-  }
-
-  encodeImageFileAsURL(element) {
-    let file = element.files[0]
+  changeFile(file) {
     let reader = new FileReader()
     reader.readAsDataURL(file)
+    reader.onload = (event) => {
+      this.setState({
+        fileSelected: event.target.result,
+      })
+    }
+  }
+
+  uploadFileHandler() {
+    axios
+      .put(
+        `https://marketplace-express.herokuapp.com/transaksi/${
+          this.props.location.state
+        }`,
+        {
+          bukti_bayar: this.state.fileSelected,
+        },
+      )
+      .then((res) => {
+        document.getElementById('input-bukti').value = ''
+        this.setState({ fileSelected: null })
+      })
+      .catch((err) => console.log(err))
   }
 
   render() {
+    const { open } = this.state
+
     return (
       <Container>
         <Header as="h1" icon textAlign="center">
@@ -50,13 +69,18 @@ export default class DetailTransaksi extends Component {
           <Header.Content>Id Transaksi</Header.Content>
           <Header.Content>{this.props.location.state}</Header.Content>
         </Header>
-
         <Input
+          id="input-bukti"
+          label="Pilih File"
           type="file"
-          onChange={(event) => this.changeImage(event.target.files[0])}
-          label="Upload Bukti Transaksi"
+          onChange={(event) => this.changeFile(event.target.files[0])}
         />
-
+        &nbsp; &nbsp;
+        {this.state.fileSelected && (
+          <Button primary onClick={() => this.uploadFileHandler()}>
+            Upload
+          </Button>
+        )}
         <Table singleLine>
           <Table.Header>
             <Table.HeaderCell>Nama Produk</Table.HeaderCell>
@@ -68,7 +92,7 @@ export default class DetailTransaksi extends Component {
           <Table.Body>
             {this.state.detailTransaksi.map((dt) => {
               return (
-                <Table.Row>
+                <Table.Row key={dt.id_produk}>
                   <TableCell>{dt.produk.nama}</TableCell>
                   <TableCell>{dt.jumlah}</TableCell>
                   <TableCell>{dt.berat}</TableCell>
@@ -81,4 +105,14 @@ export default class DetailTransaksi extends Component {
       </Container>
     )
   }
+}
+
+const styles = {
+  timesFolated: {
+    marginLeft: '78%',
+    cursor: 'pointer',
+  },
+  inputStyle: {
+    display: 'none',
+  },
 }
