@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import {
   Container,
   Image,
@@ -14,19 +13,14 @@ class DetailProduk extends Component {
   state = {
     produk: this.props.location.state,
     jumlah: 1,
+    provinsi: [],
+    kota: [],
+    selectedProvinsi: null,
+    selectedKota: null,
   }
 
   changeJumlah(jumlah) {
     this.setState({ jumlah })
-  }
-
-  addKeranjang() {
-    axios
-      .post('https://marketplace-express.herokuapp.com/keranjang', {
-        id_produk: this.state.produk.id_produk,
-        jumlah: this.state.jumlah,
-      })
-      .then((response) => this.props.history.push('/keranjang'))
   }
 
   render() {
@@ -40,13 +34,13 @@ class DetailProduk extends Component {
               </p>
             </Grid.Column>
             <Grid.Column>
+              <h3> Nama Barang: {this.state.produk.nama} </h3>
+              <h3> Harga: {this.state.produk.harga} </h3>
+              <h3> Stok: {this.state.produk.stok} </h3>
+              <h3> Berat: {this.state.produk.berat} gram</h3>
+              <h3> Deskripsi:</h3> <p>{this.state.produk.deskripsi}</p>
               <p>
-                <h3> Nama Barang: {this.state.produk.nama} </h3>
-                <h3> Harga: {this.state.produk.harga} </h3>
-                <h3> Stok: {this.state.produk.stok} </h3>
-              </p>
-              <p>
-                Jumlah:
+                Jumlah:{' '}
                 <Input
                   type="number"
                   placeholder="Jumlah"
