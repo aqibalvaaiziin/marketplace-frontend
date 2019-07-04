@@ -7,7 +7,7 @@ export default class CardLogTransaksi extends Component {
       <Container>
         <Card fluid style={styles.textColor}>
           <Card.Content>
-            <Card.Header>Id transaksi</Card.Header>
+            <Card.Header>Id Transaksi : {this.props.idTransaksi}</Card.Header>
           </Card.Content>
           <Card.Content>
             <Grid divided>
