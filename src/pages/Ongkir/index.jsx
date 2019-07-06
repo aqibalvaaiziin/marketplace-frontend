@@ -7,7 +7,8 @@ import {
   Segment,
   Dropdown,
   Button,
-  Card,
+  Grid,
+  Input,
 } from 'semantic-ui-react'
 
 export default class Ongkir extends Component {
@@ -18,6 +19,7 @@ export default class Ongkir extends Component {
     selectedKota: null,
     idKota: null,
     idProvinsi: null,
+    detail_alamat: '',
     ongkos: null,
   }
 
@@ -27,6 +29,10 @@ export default class Ongkir extends Component {
 
   changeJumlah(jumlah) {
     this.setState({ jumlah })
+  }
+
+  changeDetailAlamat = (event) => {
+    this.setState({ detail_alamat: event.target.value })
   }
 
   addKeranjang() {
@@ -55,32 +61,42 @@ export default class Ongkir extends Component {
 
   getSelectedKota = (e, { value }) => {
     this.setState({ selectedKota: e.target.textContent, idKota: value })
+    this.hitungOngkir()
   }
 
   hitungOngkir = () => {
     const isi = {
       asal: 256,
       tujuan: this.state.idKota,
-      berat: 5,
+      berat: this.props.location.state.totalBerat,
     }
     axios
       .post('https://marketplace-express.herokuapp.com/ongkir', isi)
       .then((response) => {
-        let harga = response.data.rajaongkir.results[0].costs.find(
-          (cost) => cost.service === 'REG',
-        )
-        console.log(harga)
-
-        this.setState({ ongkos: harga })
+        this.setState({
+          ongkos: response.data.cost[0].value,
+        })
       })
+  }
+
+  bayar = () => {
+    axios
+      .post('https://marketplace-express.herokuapp.com/transaksi', {
+        total_harga: this.props.location.state.totalHarga,
+        total_berat: this.props.location.state.totalBerat,
+        ongkir: this.state.ongkos,
+        kota_asal: 256,
+        kota_tujuan: this.state.idKota,
+        detail_alamat: this.state.detail_alamat,
+      })
+      .then(() => this.props.history.push('/transaksi'))
   }
 
   render() {
     const { provinsi, kota } = this.state
-
     const optionProvinsi = provinsi.map((provinsi) => ({
       key: provinsi.id_provinsi,
-      text: provinsi.nama,
+      text: provinsi.provinsi,
       value: provinsi.id_provinsi,
     }))
 
@@ -95,55 +111,67 @@ export default class Ongkir extends Component {
         <Header as="h1" icon textAlign="center">
           <Icon name="truck" circular />
           <Header.Content>Ongkir</Header.Content>
-          <Header.Content>{}</Header.Content>
         </Header>
         <Segment textAlign="center">
-          <p>
-            Provinsi:
-            <Dropdown
-              placeholder="Provinsi"
-              search
-              selection
-              options={optionProvinsi}
-              onChange={this.getKota}
-            />{' '}
-            Kota:
-            <Dropdown
-              placeholder="Kota"
-              search
-              selection
-              options={optionKota}
-              onChange={this.getSelectedKota}
-            />
-          </p>
-          <Button primary onClick={this.hitungOngkir}>
-            Hitung Ongkir
-          </Button>
-          {this.state.ongkos && (
-            <Card.Group>
-              <Card>
-                <Card.Content>
-                  <Card.Header>JNE</Card.Header>
-                  <Card.Meta>Service: {this.state.ongkos.service}</Card.Meta>
-                  <Card.Description>
-                    Deskripsi: {this.state.ongkos.description}
-                    <br />
-                    Harga: {this.state.ongkos.cost[0].value}
-                  </Card.Description>
-                </Card.Content>
-                <Card.Content extra>
-                  <div className="ui two buttons">
-                    <Button basic color="green">
-                      Approve
+          <Grid textAlign="center">
+            <Grid.Row>
+              <Grid.Column width="5">Provinsi</Grid.Column>
+              <Grid.Column width="5">Kota</Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column width="5">
+                <Dropdown
+                  placeholder="Provinsi"
+                  fluid
+                  search
+                  selection
+                  options={optionProvinsi}
+                  onChange={this.getKota}
+                />
+              </Grid.Column>
+
+              <Grid.Column width="5">
+                <Dropdown
+                  placeholder="Kota"
+                  fluid
+                  search
+                  selection
+                  options={optionKota}
+                  onChange={this.getSelectedKota}
+                />
+              </Grid.Column>
+            </Grid.Row>
+            {this.state.ongkos && (
+              <>
+                <Grid.Row>
+                  <Grid.Column>
+                    <Header
+                      content="JNE REGULAR"
+                      subheader={'Rp. ' + this.state.ongkos}
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                  <Grid.Column>
+                    <Input
+                      type="text"
+                      label="Alamat"
+                      value={this.state.detail_alamat}
+                      onChange={this.changeDetailAlamat}
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                  <Grid.Column>
+                    <Button primary onClick={this.bayar}>
+                      Bayar
                     </Button>
-                    <Button basic color="red">
-                      Decline
-                    </Button>
-                  </div>
-                </Card.Content>
-              </Card>
-            </Card.Group>
-          )}
+                  </Grid.Column>
+                </Grid.Row>
+              </>
+            )}
+          </Grid>
         </Segment>
       </Container>
     )

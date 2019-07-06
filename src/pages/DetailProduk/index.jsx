@@ -8,6 +8,7 @@ import {
   Icon,
   Input,
 } from 'semantic-ui-react'
+import axios from 'axios'
 
 class DetailProduk extends Component {
   state = {
@@ -21,6 +22,16 @@ class DetailProduk extends Component {
 
   changeJumlah(jumlah) {
     this.setState({ jumlah })
+  }
+
+  addKeranjang() {
+    axios
+      .post('https://marketplace-express.herokuapp.com/keranjang', {
+        id_produk: this.state.produk.id_produk,
+        jumlah: this.state.jumlah,
+      })
+      .then((response) => this.props.history.push('/keranjang'))
+      .catch((err) => console.log(err))
   }
 
   render() {

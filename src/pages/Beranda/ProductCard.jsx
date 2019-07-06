@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Icon, Image, Button } from 'semantic-ui-react'
+import { Card, Image } from 'semantic-ui-react'
 import axios from 'axios'
 
 class CardProduct extends Component {
