@@ -4,8 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Beranda from './pages/Beranda'
 import DetailProduk from './pages/DetailProduk'
 import Keranjang from './pages/Keranjang'
-import LogTransaksi from './pages/LogTransaksi/LogTransaksi'
-import DetailTransaksi from './pages/LogTransaksi/DetailTransaksi'
+import { LogTransaksi, DetailTransaksi } from './pages/Transaksi'
 import Ongkir from './pages/Ongkir'
 
 const routes = [
@@ -34,7 +33,6 @@ const routes = [
     component: LogTransaksi,
     name: 'logTransaksi',
     label: 'Log Transaksi',
-    hide: true,
   },
   {
     path: '/transaksi/detail',
