@@ -6,9 +6,7 @@ import {
   Container,
   Input,
   TableCell,
-  Button,
-  Modal,
-  Image,
+  Button
 } from 'semantic-ui-react'
 import axios from 'axios'
 
@@ -22,7 +20,7 @@ export default class DetailTransaksi extends Component {
     axios
       .get(
         `https://marketplace-express.herokuapp.com/transaksi/${
-          this.props.location.state
+        this.props.location.state
         }/detail`,
       )
       .then((res) => {
@@ -32,35 +30,30 @@ export default class DetailTransaksi extends Component {
       })
   }
 
-  changeFile(file) {
-    let reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = (event) => {
-      this.setState({
-        fileSelected: event.target.result,
-      })
-    }
+  changeFile = (event) => {
+    console.log('gambarku ', event.target.files[0])
+    this.setState({
+      fileSelected: event.target.files[0]
+    })
   }
 
-  uploadFileHandler() {
-    axios
-      .put(
-        `https://marketplace-express.herokuapp.com/transaksi/${
-          this.props.location.state
-        }`,
-        {
-          bukti_bayar: this.state.fileSelected,
-        },
-      )
+  uploadFileHandler = () => {
+    const fd = new FormData()
+    fd.append('bukti_bayar', this.state.fileSelected)
+    axios.put(`https://marketplace-express.herokuapp.com/transaksi/${this.props.location.state}`, fd, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
       .then((res) => {
         document.getElementById('input-bukti').value = ''
         this.setState({ fileSelected: null })
       })
       .catch((err) => console.log(err))
+
   }
 
   render() {
-    const { open } = this.state
 
     return (
       <Container>
@@ -73,11 +66,11 @@ export default class DetailTransaksi extends Component {
           id="input-bukti"
           label="Pilih File"
           type="file"
-          onChange={(event) => this.changeFile(event.target.files[0])}
+          onChange={this.changeFile}
         />
         &nbsp; &nbsp;
         {this.state.fileSelected && (
-          <Button primary onClick={() => this.uploadFileHandler()}>
+          <Button primary onClick={this.uploadFileHandler}>
             Upload
           </Button>
         )}
@@ -107,12 +100,4 @@ export default class DetailTransaksi extends Component {
   }
 }
 
-const styles = {
-  timesFolated: {
-    marginLeft: '78%',
-    cursor: 'pointer',
-  },
-  inputStyle: {
-    display: 'none',
-  },
-}
+

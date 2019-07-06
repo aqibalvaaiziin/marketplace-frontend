@@ -38,6 +38,7 @@ export default class LogTransaksi extends Component {
               <div style={styles.marginCard}>
                 <CardLogTransaksi
                   key={transaksi.id_transaksi}
+                  idTransaksi={transaksi.id_transaksi}
                   kotaAsal={transaksi.kota_asal}
                   tujuan={transaksi.kota_tujuan}
                   detailAlamat={transaksi.detail_alamat}
