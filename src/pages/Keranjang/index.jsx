@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Container, Table, Button, Header } from 'semantic-ui-react'
 import axios from 'axios'
 import InputJumlah from './InputJumlah'
+import { Link } from 'react-router-dom'
 
 export default class Home extends Component {
   state = {
@@ -27,9 +28,15 @@ export default class Home extends Component {
       .then(() => this.getKeranjang())
   }
 
-  getTotal() {
+  getTotalHarga() {
     return this.state.keranjang
       .map((item) => item.produk.harga * item.jumlah)
+      .reduce((prev, next) => prev + next)
+  }
+
+  getTotalBerat() {
+    return this.state.keranjang
+      .map((item) => item.produk.berat * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
 
@@ -78,12 +85,21 @@ export default class Home extends Component {
                   <Table.HeaderCell textAlign="right" colSpan="4">
                     Total
                   </Table.HeaderCell>
-                  <Table.HeaderCell>{this.getTotal()}</Table.HeaderCell>
+                  <Table.HeaderCell>{this.getTotalHarga()}</Table.HeaderCell>
                 </Table.Row>
               </Table.Footer>
             </Table>
 
-            <Button primary>Bayar</Button>
+            <Link
+              to={{
+                pathname: '/ongkir',
+                state: {
+                  totalBerat: this.getTotalBerat(),
+                  totalHarga: this.getTotalHarga(),
+                },
+              }}>
+              <Button primary>Lanjutkan</Button>
+            </Link>
           </>
         ) : (
           <Header>Keranjang Kosong</Header>
