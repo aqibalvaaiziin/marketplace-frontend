@@ -5,6 +5,7 @@ import Beranda from './pages/Beranda'
 import DetailProduk from './pages/DetailProduk'
 import Keranjang from './pages/Keranjang'
 import { LogTransaksi, DetailTransaksi } from './pages/Transaksi'
+import Ongkir from './pages/Ongkir'
 
 const routes = [
   {
@@ -32,13 +33,19 @@ const routes = [
     component: LogTransaksi,
     name: 'logTransaksi',
     label: 'Log Transaksi',
-    hide: false,
   },
   {
     path: '/transaksi/detail',
     component: DetailTransaksi,
     name: 'detailTransaksi',
     label: 'Detail Transaksi',
+    hide: true,
+  },
+  {
+    path: '/ongkir',
+    component: Ongkir,
+    name: 'ongkir',
+    label: 'Ongkir',
     hide: true,
   },
 ]
