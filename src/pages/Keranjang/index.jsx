@@ -1,110 +1,106 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Table, Button, Header } from 'semantic-ui-react'
 import axios from 'axios'
 import InputJumlah from './InputJumlah'
 import { Link } from 'react-router-dom'
 
-export default class Home extends Component {
-  state = {
-    keranjang: [],
-  }
+export default function Keranjang() {
+  const [keranjang, setKeranjang] = useState([])
 
-  componentDidMount() {
-    this.getKeranjang()
-  }
+  useEffect(() => {
+    getKeranjang()
+  }, [])
 
-  getKeranjang() {
+  function getKeranjang() {
     axios
       .get('https://marketplace-express.herokuapp.com/keranjang')
-      .then((response) => this.setState({ keranjang: response.data }))
+      .then((response) => setKeranjang(response.data))
   }
 
-  changeJumlah(id_keranjang, jumlah) {
+  function changeJumlah(id_keranjang, jumlah) {
     axios
       .put(
         `https://marketplace-express.herokuapp.com/keranjang/${id_keranjang}`,
         { jumlah },
       )
-      .then(() => this.getKeranjang())
+      .then(() => getKeranjang())
   }
 
-  getTotalHarga() {
-    return this.state.keranjang
+  function getTotalHarga() {
+    return keranjang
       .map((item) => item.produk.harga * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
 
-  getTotalBerat() {
-    return this.state.keranjang
+  function getTotalBerat() {
+    return keranjang
       .map((item) => item.produk.berat * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
 
-  render() {
-    return (
-      <Container>
-        <Header
-          size="large"
-          content="Keranjang"
-          subheader="Daftar produk yang akan dipesan"
-        />
-        {this.state.keranjang.length ? (
-          <>
-            <Table celled fixed>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>No</Table.HeaderCell>
-                  <Table.HeaderCell>Nama Produk</Table.HeaderCell>
-                  <Table.HeaderCell>Harga</Table.HeaderCell>
-                  <Table.HeaderCell>Jumlah</Table.HeaderCell>
-                  <Table.HeaderCell>Sub Total</Table.HeaderCell>
+  return (
+    <Container>
+      <Header
+        size="large"
+        content="Keranjang"
+        subheader="Daftar produk yang akan dipesan"
+      />
+      {keranjang.length ? (
+        <>
+          <Table celled fixed>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>No</Table.HeaderCell>
+                <Table.HeaderCell>Nama Produk</Table.HeaderCell>
+                <Table.HeaderCell>Harga</Table.HeaderCell>
+                <Table.HeaderCell>Jumlah</Table.HeaderCell>
+                <Table.HeaderCell>Sub Total</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              {keranjang.map((item, index) => (
+                <Table.Row key={item.id_keranjang}>
+                  <Table.Cell>{index + 1}</Table.Cell>
+                  <Table.Cell>{item.produk.nama}</Table.Cell>
+                  <Table.Cell>{item.produk.harga}</Table.Cell>
+                  <Table.Cell>
+                    <InputJumlah
+                      initialValue={item.jumlah}
+                      onSubmit={(value) =>
+                        changeJumlah(item.id_keranjang, value)
+                      }
+                    />
+                  </Table.Cell>
+                  <Table.Cell>{item.produk.harga * item.jumlah}</Table.Cell>
                 </Table.Row>
-              </Table.Header>
+              ))}
+            </Table.Body>
 
-              <Table.Body>
-                {this.state.keranjang.map((item, index) => (
-                  <Table.Row key={item.id_keranjang}>
-                    <Table.Cell>{index + 1}</Table.Cell>
-                    <Table.Cell>{item.produk.nama}</Table.Cell>
-                    <Table.Cell>{item.produk.harga}</Table.Cell>
-                    <Table.Cell>
-                      <InputJumlah
-                        initialValue={item.jumlah}
-                        onSubmit={(value) =>
-                          this.changeJumlah(item.id_keranjang, value)
-                        }
-                      />
-                    </Table.Cell>
-                    <Table.Cell>{item.produk.harga * item.jumlah}</Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
+            <Table.Footer>
+              <Table.Row>
+                <Table.HeaderCell textAlign="right" colSpan="4">
+                  Total
+                </Table.HeaderCell>
+                <Table.HeaderCell>{getTotalHarga()}</Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
+          </Table>
 
-              <Table.Footer>
-                <Table.Row>
-                  <Table.HeaderCell textAlign="right" colSpan="4">
-                    Total
-                  </Table.HeaderCell>
-                  <Table.HeaderCell>{this.getTotalHarga()}</Table.HeaderCell>
-                </Table.Row>
-              </Table.Footer>
-            </Table>
-
-            <Link
-              to={{
-                pathname: '/ongkir',
-                state: {
-                  totalBerat: this.getTotalBerat(),
-                  totalHarga: this.getTotalHarga(),
-                },
-              }}>
-              <Button primary>Lanjutkan</Button>
-            </Link>
-          </>
-        ) : (
-          <Header>Keranjang Kosong</Header>
-        )}
-      </Container>
-    )
-  }
+          <Link
+            to={{
+              pathname: '/ongkir',
+              state: {
+                totalBerat: getTotalBerat(),
+                totalHarga: getTotalHarga(),
+              },
+            }}>
+            <Button primary>Lanjutkan</Button>
+          </Link>
+        </>
+      ) : (
+        <Header>Keranjang Kosong</Header>
+      )}
+    </Container>
+  )
 }

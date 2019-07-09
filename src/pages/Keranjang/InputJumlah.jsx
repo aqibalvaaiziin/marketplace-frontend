@@ -1,48 +1,42 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Input, Button } from 'semantic-ui-react'
 
-export default class InputJumlah extends Component {
-  state = {
-    value: this.props.initialValue,
+export default function InputJumlah(props) {
+  const [value, setValue] = useState(props.initialValue)
+
+  function changeValue(value) {
+    setValue(value)
   }
 
-  changeValue(value) {
-    this.setState({ value })
+  function resetValue() {
+    setValue(props.initialValue)
   }
 
-  resetValue() {
-    this.setState({ value: this.props.initialValue })
+  function isTouched() {
+    return parseInt(value) !== props.initialValue
   }
 
-  isTouched() {
-    return parseInt(this.state.value) !== this.props.initialValue
-  }
+  return (
+    <>
+      <Input
+        type="number"
+        value={value}
+        onChange={(event, { value }) => changeValue(value)}
+        min="1"
+      />
 
-  render() {
-    return (
-      <>
-        <Input
-          type="number"
-          value={this.state.value}
-          onChange={(event, { value }) => this.changeValue(value)}
-          min="1"
-        />
-
-        {this.isTouched() && (
-          <Button.Group style={styles.buttonGroup}>
-            <Button
-              primary
-              onClick={() => this.props.onSubmit(this.state.value)}>
-              Simpan
-            </Button>
-            <Button color="red" onClick={() => this.resetValue()}>
-              Batal
-            </Button>
-          </Button.Group>
-        )}
-      </>
-    )
-  }
+      {isTouched() && (
+        <Button.Group style={styles.buttonGroup}>
+          <Button primary onClick={() => props.onSubmit(value)}>
+            Simpan
+          </Button>
+          <Button color="red" onClick={() => resetValue()}>
+            Batal
+          </Button>
+        </Button.Group>
+      )}
+    </>
+  )
 }
 
 const styles = {
