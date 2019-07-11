@@ -1,48 +1,37 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import ProductCard from './ProductCard'
 import axios from 'axios'
 
-export default class Home extends Component {
-  state = {
-    produk: [],
-  }
+function Home() {
+  const [produks, setProduks] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     axios
       .get('https://marketplace-express.herokuapp.com/produk')
-      .then((res) => {
-        this.setState({
-          produk: res.data,
-        })
-      })
-  }
+      .then((res) => setProduks(res.data))
+  }, [])
 
-  render() {
-    return (
-      <Container>
-        <Grid columns={5}>
-          <Grid.Row>
-            {this.state.produk.map((produk) => {
-              return (
-                <Grid.Column style={styles.cardRow}>
-                  <Link to={{ pathname: '/detail-produk', state: produk }}>
-                    <ProductCard
-                      key={produk.id_produk}
-                      name={produk.nama}
-                      price={produk.harga}
-                    />
-                  </Link>
-                </Grid.Column>
-              )
-            })}
-          </Grid.Row>
-        </Grid>
-      </Container>
-    )
-  }
+
+  return (
+    <Container>
+      <Grid columns={5}>
+        <Grid.Row>
+          {produks.map(produk => (
+            <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+              <Link to={{ pathname: '/detail-produk', state: produk }}>
+                <ProductCard name={produk.nama} price={produk.harga} />
+              </Link>
+            </Grid.Column>
+          ))}
+        </Grid.Row>
+      </Grid>
+    </Container>
+  )
 }
+
+export default Home
 
 const styles = {
   cardRow: {
