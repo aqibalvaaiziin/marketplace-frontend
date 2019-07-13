@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { Menu, Icon } from 'semantic-ui-react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Menu } from 'semantic-ui-react'
+import { BrowserRouter, Route, Link } from 'react-router-dom'
 import Beranda from './pages/Beranda'
 import DetailProduk from './pages/DetailProduk'
 import Keranjang from './pages/Keranjang'
@@ -19,7 +19,6 @@ const routes = [
     component: Keranjang,
     name: 'keranjang',
     label: 'Keranjang',
-    hide: true,
   },
   {
     path: '/detail-produk',
@@ -50,62 +49,45 @@ const routes = [
   },
 ]
 
-export default class App extends Component {
-  state = {}
+function App() {
+  const [activeRoute, setActiveRoute] = useState(window.location.pathname)
 
-  changeActiveRoute(name) {
-    this.setState({
-      activeItem: name,
-    })
+  function isActive(route) {
+    return activeRoute === route.name || window.location.pathname === route.path
   }
 
-  isActive(route) {
-    return (
-      this.state.activeItem === route.name ||
-      window.location.pathname === route.path
-    )
-  }
-
-  render() {
-    return (
-      <div>
-        <Router>
-          <Menu fixed="top">
-            {routes.map(
-              (route) =>
-                !route.hide && (
-                  <Link to={route.path}>
-                    <Menu.Item
-                      name={route.name}
-                      active={this.isActive(route)}
-                      onClick={(e, { name }) => this.changeActiveRoute(name)}>
-                      {route.label}
-                    </Menu.Item>
-                  </Link>
-                ),
-            )}
-            <Menu.Menu position="right">
-              <Link to="/keranjang">
-                <Menu.Item>
-                  <Icon name="cart" />
+  return (
+    <BrowserRouter>
+      <Menu secondary pointing>
+        <Link to="/" onClick={() => setActiveRoute('/')}>
+          <Menu.Item header>Marketplace Koperasi</Menu.Item>
+        </Link>
+        {routes.map(
+          (route) =>
+            !route.hide && (
+              <Link to={route.path} key={route.name}>
+                <Menu.Item
+                  as="div"
+                  name={route.name}
+                  active={isActive(route)}
+                  onClick={(e, { name }) => setActiveRoute(name)}>
+                  {route.label}
                 </Menu.Item>
               </Link>
-            </Menu.Menu>
-          </Menu>
+            ),
+        )}
+      </Menu>
 
-          <div style={styles.pageContainer}>
-            {routes.map((route) => (
-              <Route path={route.path} exact component={route.component} />
-            ))}
-          </div>
-        </Router>
-      </div>
-    )
-  }
+      {routes.map((route) => (
+        <Route
+          path={route.path}
+          exact
+          component={route.component}
+          key={route.name}
+        />
+      ))}
+    </BrowserRouter>
+  )
 }
 
-const styles = {
-  pageContainer: {
-    marginTop: 50,
-  },
-}
+export default App
