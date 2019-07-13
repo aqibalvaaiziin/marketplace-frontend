@@ -40,11 +40,6 @@ export default function Keranjang() {
 
   return (
     <Container>
-      <Header
-        size="large"
-        content="Keranjang"
-        subheader="Daftar produk yang akan dipesan"
-      />
       {keranjang.length ? (
         <>
           <Table celled fixed>
