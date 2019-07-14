@@ -1,52 +1,135 @@
-import React from 'react'
-import { Card, Container, Grid, Image } from 'semantic-ui-react'
+import React, { useState } from 'react';
+import { Container, Accordion, Icon, Grid, Header } from 'semantic-ui-react';
 
 
-function CardLogTransaksi (props){
+function CardLogTransaksi(props) {
+
+  const [activeIndex, setActiveIndex] = useState(null)
+
+  function handleClick(event, titleProps) {
+    const { index } = titleProps;
+    const newIndex = activeIndex === index ? -1 : index;
+    setActiveIndex(newIndex);
+  }
+
+  
+
   return (
-          <Container>
-            <Card fluid style={styles.textColor}>
-              <Card.Content>
-                <Card.Header>Id Transaksi : {props.idTransaksi}</Card.Header>
-              </Card.Content>
-              <Card.Content>
-                <Grid divided>
-                  <Grid.Row>
-                    <Grid.Column width={9}>
-                      <Card.Description>Kota Asal : {props.kotaAsal}</Card.Description>
-                      <Card.Description>Kota Tujuan : {props.tujuan}</Card.Description>
-                      <Card.Description>Alamat Tujuan : {props.detailAlamat}</Card.Description>
-                      <Card.Description>Tanggal Transaksi : {props.tanggal}</Card.Description>
-                    </Grid.Column>
-                    <Grid.Column width={5}>
-                      <Card.Description>Total Berat : {props.totalBerat}</Card.Description>
-                      <Card.Description>Total Harga : {props.totalHarga}</Card.Description>
-                      <Card.Description>Ongkos Kirim :{props.ongkir}</Card.Description>
-                    </Grid.Column>
-                    <Grid.Column width={2}>
-                      <Image
-                        style={styles.imageFloat}
-                        src={props.buktiBayar}
-                      />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </Card.Content>
-            </Card>
-          </Container>
-        )
+    <Container>
+
+      <Accordion fluid styled>
+
+        <Grid columns={3} celled>
+          <Grid.Column width={6}>
+            <Header as='h2'>
+              <Icon name='file alternate outline' size="big" />
+              <Header.Content style={styles.h2}>
+                {props.idTransaksi}
+                <Header.Subheader>{props.tanggal}</Header.Subheader>
+              </Header.Content>
+            </Header>
+          </Grid.Column>
+          <Grid.Column width={7}>
+            <Header as='h2'>
+              <Header.Content>
+                <Header.Subheader>Total Transaksi :</Header.Subheader>
+                Rp.{props.totalTransaksi + props.ongkir }
+              </Header.Content>
+            </Header>
+          </Grid.Column>
+          <Grid.Column width={3} textAlign="center" verticalAlign="middle">
+            <Header as='h1'>
+              
+            </Header>
+          </Grid.Column>
+        </Grid>
+
+        <Accordion.Title active={activeIndex === 1} index={1} onClick={handleClick}>
+          <Icon name='dropdown' />
+          Rincian Pembayaran
+      </Accordion.Title>
+        <Accordion.Content active={activeIndex === 1}>
+          <div style={styles.box}>
+            <div style={styles.boxTitle}>
+              <p>Total Berat</p>
+              <p>Total Harga Produk</p>
+              <p>Ongkos Kirim</p>
+            </div>
+            <div style={styles.boxColon}>
+              <p>:</p>
+              <p>:</p>
+              <p>:</p>
+            </div>
+            <div style={styles.boxValue}>
+              <p>{props.totalBerat} g</p>
+              <p>Rp. {props.totalTransaksi}</p>
+              <p>Rp. {props.ongkir}</p>
+            </div>
+          </div>
+        </Accordion.Content>
+        <Accordion.Title active={activeIndex === 0} index={0} onClick={handleClick}>
+          <Icon name='dropdown' />
+          Alamat Transaksi
+      </Accordion.Title>
+        <Accordion.Content active={activeIndex === 0}>
+          <div style={styles.box}>
+            <div style={styles.boxTitle}>
+              <p>Kota Asal</p>
+              <p>Kota Tujuan</p>
+              <p>Alamat Tujuan</p>
+            </div>
+            <div style={styles.boxColon}>
+              <p>:</p>
+              <p>:</p>
+              <p>:</p>
+            </div>
+            <div style={styles.boxValue}>
+              <p>{props.kotaAsal}</p>
+              <p>{props.tujuan}</p>
+              <p>{props.detailAlamat}</p>
+            </div>
+          </div>
+        </Accordion.Content>
+
+        <Accordion.Title active={activeIndex === 2} index={2} onClick={handleClick}>
+          <Icon name='dropdown' />
+          Bukti Pembayaran
+      </Accordion.Title>
+        <Accordion.Content active={activeIndex === 2}>
+          kosong
+        </Accordion.Content>
+      </Accordion>
+    </Container>
+  )
 }
 
 
 export default CardLogTransaksi
 
 const styles = {
-  textColor: {
-    color: 'black',
-    boxShadow: '2px 3px 6px 3px #ccc',
+  box: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row'
   },
-  imageFloat: {
-    width: '90%',
-    marginTop: '5px'
+  boxColon: {
+    marginLeft: 10
   },
+  boxValue: {
+    marginLeft: 10
+  },
+  titleMargin: {
+    marginLeft: 18,
+    padding: 0
+  },
+  date: {
+    marginLeft: 18,
+    padding: 0,
+  },
+  floatRight: {
+    textAlign: 'right'
+  },
+  h2: {
+    padding: 10
+  }
 }
