@@ -26,22 +26,9 @@ export default function Ongkir(props) {
     getProvinsi()
   }, [])
 
-  // function changeJumlah(jumlah) {
-  //   this.setState({ jumlah })
-  // }
-
   function changeDetailAlamat(event) {
     setDetailAlamat(event.target.value)
   }
-
-  // function addKeranjang() {
-  //   axios
-  //     .post('https://marketplace-express.herokuapp.com/keranjang', {
-  //       id_produk: this.state.produk.id_produk,
-  //       jumlah: this.state.jumlah,
-  //     })
-  //     .then((response) => this.props.history.push('/keranjang'))
-  // }
 
   function getProvinsi() {
     axios
