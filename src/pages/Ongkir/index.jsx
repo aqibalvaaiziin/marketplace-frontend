@@ -20,7 +20,8 @@ export default class Ongkir extends Component {
     idKota: null,
     idProvinsi: null,
     detail_alamat: '',
-    ongkos: null,
+    ongkos: 0,
+    error: false,
   }
 
   componentDidMount() {
@@ -60,8 +61,9 @@ export default class Ongkir extends Component {
   }
 
   getSelectedKota = (e, { value }) => {
-    this.setState({ selectedKota: e.target.textContent, idKota: value })
-    this.hitungOngkir()
+    this.setState({ selectedKota: e.target.textContent, idKota: value }, () => {
+      this.hitungOngkir()
+    })
   }
 
   hitungOngkir = () => {
@@ -73,17 +75,23 @@ export default class Ongkir extends Component {
     axios
       .post('https://marketplace-express.herokuapp.com/ongkir', isi)
       .then((response) => {
-        this.setState({
-          ongkos: response.data.cost[0].value,
-        })
+        if (response.data.error) {
+          this.setState({
+            error: true,
+            ongkos: 0,
+          })
+        } else {
+          this.setState({
+            ongkos: response.data.cost[0].value,
+            error: false,
+          })
+        }
       })
   }
 
   bayar = () => {
     axios
       .post('https://marketplace-express.herokuapp.com/transaksi', {
-        total_harga: this.props.location.state.totalHarga,
-        total_berat: this.props.location.state.totalBerat,
         ongkir: this.state.ongkos,
         kota_asal: 256,
         kota_tujuan: this.state.idKota,
@@ -100,11 +108,21 @@ export default class Ongkir extends Component {
       value: provinsi.id_provinsi,
     }))
 
-    const optionKota = kota.map((kota) => ({
-      key: kota.id_kota,
-      text: kota.kota,
-      value: kota.id_kota,
-    }))
+    const optionKota = kota.map((kota) => {
+      if (kota.tipe === 'Kabupaten') {
+        return {
+          key: kota.id_kota,
+          text: kota.tipe + ' ' + kota.kota,
+          value: kota.id_kota,
+        }
+      } else {
+        return {
+          key: kota.id_kota,
+          text: kota.kota,
+          value: kota.id_kota,
+        }
+      }
+    })
 
     return (
       <Container>
@@ -142,7 +160,7 @@ export default class Ongkir extends Component {
                 />
               </Grid.Column>
             </Grid.Row>
-            {this.state.ongkos && (
+            {this.state.ongkos > 0 && (
               <>
                 <Grid.Row>
                   <Grid.Column>
@@ -170,6 +188,14 @@ export default class Ongkir extends Component {
                   </Grid.Column>
                 </Grid.Row>
               </>
+            )}
+
+            {this.state.error && (
+              <Grid.Row>
+                <Grid.Column>
+                  <Header content="JNE REG Tidak Tersedia" />
+                </Grid.Column>
+              </Grid.Row>
             )}
           </Grid>
         </Segment>
