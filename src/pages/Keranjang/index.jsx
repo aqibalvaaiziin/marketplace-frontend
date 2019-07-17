@@ -5,7 +5,7 @@ import InputJumlah from './InputJumlah'
 import { Link } from 'react-router-dom'
 
 export default function Keranjang() {
-  const [keranjang, setKeranjang] = useState([])
+  const [kumpulanKeranjang, setKumpulanKeranjang] = useState([])
 
   useEffect(() => {
     getKeranjang()
@@ -14,7 +14,7 @@ export default function Keranjang() {
   function getKeranjang() {
     axios
       .get('https://marketplace-express.herokuapp.com/keranjang')
-      .then((response) => setKeranjang(response.data))
+      .then(response => setKumpulanKeranjang(response.data))
   }
 
   function changeJumlah(id_keranjang, jumlah) {
@@ -27,20 +27,20 @@ export default function Keranjang() {
   }
 
   function getTotalHarga() {
-    return keranjang
-      .map((item) => item.produk.harga * item.jumlah)
+    return kumpulanKeranjang
+      .map(item => item.produk.harga * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
 
   function getTotalBerat() {
-    return keranjang
-      .map((item) => item.produk.berat * item.jumlah)
+    return kumpulanKeranjang
+      .map(item => item.produk.berat * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
 
   return (
     <Container>
-      {keranjang.length ? (
+      {kumpulanKeranjang.length ? (
         <>
           <Table celled fixed>
             <Table.Header>
@@ -54,20 +54,22 @@ export default function Keranjang() {
             </Table.Header>
 
             <Table.Body>
-              {keranjang.map((item, index) => (
-                <Table.Row key={item.id_keranjang}>
+              {kumpulanKeranjang.map((keranjang, index) => (
+                <Table.Row key={keranjang.id_keranjang}>
                   <Table.Cell>{index + 1}</Table.Cell>
-                  <Table.Cell>{item.produk.nama}</Table.Cell>
-                  <Table.Cell>{item.produk.harga}</Table.Cell>
+                  <Table.Cell>{keranjang.produk.nama}</Table.Cell>
+                  <Table.Cell>{keranjang.produk.harga}</Table.Cell>
                   <Table.Cell>
                     <InputJumlah
-                      initialValue={item.jumlah}
-                      onSubmit={(value) =>
-                        changeJumlah(item.id_keranjang, value)
+                      initialValue={keranjang.jumlah}
+                      onSubmit={value =>
+                        changeJumlah(keranjang.id_keranjang, value)
                       }
                     />
                   </Table.Cell>
-                  <Table.Cell>{item.produk.harga * item.jumlah}</Table.Cell>
+                  <Table.Cell>
+                    {keranjang.produk.harga * keranjang.jumlah}
+                  </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

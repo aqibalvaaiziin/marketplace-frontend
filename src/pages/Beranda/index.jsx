@@ -5,20 +5,19 @@ import ProductCard from './ProductCard'
 import axios from 'axios'
 
 function Home() {
-  const [produks, setProduks] = useState([]);
+  const [kumpulanProduk, setKumpulanProduk] = useState([])
 
   useEffect(() => {
     axios
       .get('https://marketplace-express.herokuapp.com/produk')
-      .then((res) => setProduks(res.data))
+      .then(res => setKumpulanProduk(res.data))
   }, [])
-
 
   return (
     <Container>
       <Grid columns={5}>
         <Grid.Row>
-          {produks.map(produk => (
+          {kumpulanProduk.map(produk => (
             <Grid.Column style={styles.cardRow} key={produk.id_produk}>
               <Link to={{ pathname: '/detail-produk', state: produk }}>
                 <ProductCard name={produk.nama} price={produk.harga} />

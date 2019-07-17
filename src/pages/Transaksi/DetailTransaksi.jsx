@@ -6,40 +6,43 @@ import {
   Container,
   Input,
   TableCell,
-  Button
+  Button,
 } from 'semantic-ui-react'
 import axios from 'axios'
 
-
 function DetailTransaksi(props) {
-  const [detailTransaksi, setDetailTransaksi] = useState([])
-  const [fileSelected, setFileSelected] = useState(null)
+  const [kumpulanDetailTransaksi, setKumpulanDetailTransaksi] = useState([])
+  const [selectedFile, setSelectedFile] = useState(null)
 
   useEffect(() => {
     axios
       .get(
         `https://marketplace-express.herokuapp.com/transaksi/${
-        props.location.state
+          props.location.state
         }/detail`,
       )
-      .then((res) => setDetailTransaksi(res.data))
+      .then(res => setKumpulanDetailTransaksi(res.data))
   })
-
 
   function uploadFileHandler() {
     const fd = new FormData()
-    fd.append('bukti_bayar', fileSelected)
-    axios.put(`https://marketplace-express.herokuapp.com/transaksi/${props.location.state}`, fd, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-      .then((res) => {
+    fd.append('bukti_bayar', selectedFile)
+    axios
+      .put(
+        `https://marketplace-express.herokuapp.com/transaksi/${
+          props.location.state
+        }`,
+        fd,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+      .then(() => {
         document.getElementById('input-bukti').value = ''
-        setFileSelected(null)
+        setSelectedFile(null)
       })
-      .catch((err) => console.log(err))
-
   }
 
   return (
@@ -53,13 +56,13 @@ function DetailTransaksi(props) {
         id="input-bukti"
         label="Pilih File"
         type="file"
-        onChange={ e => setFileSelected(e.target.files[0])}
+        onChange={e => setSelectedFile(e.target.files[0])}
       />
       &nbsp; &nbsp;
-            {fileSelected && (
+      {selectedFile && (
         <Button primary onClick={uploadFileHandler()}>
           Upload
-              </Button>
+        </Button>
       )}
       <Table singleLine>
         <Table.Header>
@@ -70,22 +73,18 @@ function DetailTransaksi(props) {
         </Table.Header>
 
         <Table.Body>
-          {detailTransaksi.map((dt) => {
-            return (
-              <Table.Row key={dt.id_produk}>
-                <TableCell>{dt.produk.nama}</TableCell>
-                <TableCell>{dt.jumlah}</TableCell>
-                <TableCell>{dt.berat}</TableCell>
-                <TableCell>{dt.subtotal}</TableCell>
-              </Table.Row>
-            )
-          })}
+          {kumpulanDetailTransaksi.map(detailTransaksi => (
+            <Table.Row key={detailTransaksi.id_produk}>
+              <TableCell>{detailTransaksi.produk.nama}</TableCell>
+              <TableCell>{detailTransaksi.jumlah}</TableCell>
+              <TableCell>{detailTransaksi.berat}</TableCell>
+              <TableCell>{detailTransaksi.subtotal}</TableCell>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
     </Container>
   )
 }
-
-
 
 export default DetailTransaksi

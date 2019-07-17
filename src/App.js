@@ -63,7 +63,7 @@ function App() {
           <Menu.Item header>Marketplace Koperasi</Menu.Item>
         </Link>
         {routes.map(
-          (route) =>
+          route =>
             !route.hide && (
               <Link to={route.path} key={route.name}>
                 <Menu.Item
@@ -78,7 +78,7 @@ function App() {
         )}
       </Menu>
 
-      {routes.map((route) => (
+      {routes.map(route => (
         <Route
           path={route.path}
           exact

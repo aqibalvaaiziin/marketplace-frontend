@@ -20,7 +20,7 @@ function DetailProduk(props) {
         id_produk: produk.id_produk,
         jumlah,
       })
-      .then((response) => props.history.push('/keranjang'))
+      .then(() => props.history.push('/keranjang'))
   }
 
   return (
