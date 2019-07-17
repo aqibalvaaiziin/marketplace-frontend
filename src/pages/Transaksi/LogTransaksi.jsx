@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import CardLogTransaksi from './CardLogTransaksi'
 import axios from 'axios'
-import { Button } from 'semantic-ui-react'
-import { Link } from 'react-router-dom';
 
-function LogTransaksi() {
-
-  const [transaksi, setTransaksi] = useState([])
+function LogTransaksi(props) {
+  const [kumpulanTransaksi, setKumpulanTransaksi] = useState([])
 
   useEffect(() => {
     axios
       .get('https://marketplace-express.herokuapp.com/transaksi')
-      .then((res) => setTransaksi(res.data))
+      .then(res => setKumpulanTransaksi(res.data))
   }, [])
 
   return (
     <>
-      {transaksi.map((transaksi) => {
-        let dateTime = new Date(transaksi.createdAt)
-        let date = dateTime.getDate()
-        let month = dateTime.getMonth() + 1
-        let year = dateTime.getFullYear()
-        let hour = dateTime.getHours()
-        let minutes = dateTime.getMinutes()
+      {kumpulanTransaksi.map(transaksi => {
+        const dateTime = new Date(transaksi.createdAt)
+        const date = dateTime.getDate()
+        const month = dateTime.getMonth() + 1
+        const year = dateTime.getFullYear()
+        const hour = dateTime.getHours()
+        const minutes = dateTime.getMinutes()
 
         return (
           <div style={styles.marginCard} key={transaksi.id_transaksi}>
             <CardLogTransaksi
-
               idTransaksi={transaksi.id_transaksi}
               kotaAsal={transaksi.kota_asal}
               tujuan={transaksi.kota_tujuan}
@@ -37,12 +33,13 @@ function LogTransaksi() {
               totalTransaksi={transaksi.total_harga}
               ongkir={transaksi.ongkir}
               buktiBayar={transaksi.bukti_bayar}
+              onDetailButtonClick={() =>
+                props.history.push({
+                  pathname: '/transaksi/detail',
+                  state: transaksi.id_transaksi,
+                })
+              }
             />
-            <Link to={{ pathname: '/transaksi/detail', state: transaksi.id_transaksi }} >
-              <Button basic color="blue" style={styles.buttonPosition}>
-                Detail Keranjang
-            </Button>
-            </Link>
           </div>
         )
       })}
@@ -54,17 +51,17 @@ export default LogTransaksi
 
 const styles = {
   marginCard: {
-    marginTop: '70px',
+    marginTop: '15px',
   },
   linkPosition: {
     position: 'relative',
     left: '74%',
-    fontSize: '15px'
+    fontSize: '15px',
   },
   buttonPosition: {
     position: 'relative',
     top: '610%',
     left: '76%',
-    transform: 'translate(-76%,-610%)'
-  }
+    transform: 'translate(-76%,-610%)',
+  },
 }

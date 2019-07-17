@@ -12,15 +12,25 @@ import {
 } from 'semantic-ui-react'
 
 export default function Ongkir(props) {
-  const [provinsi, setProvinsi] = useState([])
-  const [kota, setKota] = useState([])
-  const [selectedProvinsi, setSelectedProvinsi] = useState()
-  const [selectedKota, setSelectedKota] = useState()
-  const [idKota, setIdKota] = useState([])
+  const [kumpulanProvinsi, setKumpulanProvinsi] = useState([])
+  const [kumpulanKota, setKumpulanKota] = useState([])
+  const [idKota, setIdKota] = useState()
   const [idProvinsi, setIdProvinsi] = useState()
-  const [detail_alamat, setDetailAlamat] = useState()
+  const [detailAlamat, setDetailAlamat] = useState()
   const [ongkos, setOngkos] = useState()
   const [error, setError] = useState(false)
+
+  const optionProvinsi = kumpulanProvinsi.map(provinsi => ({
+    key: provinsi.id_provinsi,
+    text: provinsi.provinsi,
+    value: provinsi.id_provinsi,
+  }))
+
+  const optionKota = kumpulanKota.map(kota => ({
+    key: kota.id_kota,
+    value: kota.id_kota,
+    text: kota.tipe === 'Kabupaten' ? `${kota.tipe} ${kota.kota}` : kota.kota,
+  }))
 
   useEffect(() => {
     getProvinsi()
@@ -33,22 +43,19 @@ export default function Ongkir(props) {
   function getProvinsi() {
     axios
       .get('https://marketplace-express.herokuapp.com/provinsi')
-      .then((response) => setProvinsi(response.data))
+      .then(response => setKumpulanProvinsi(response.data))
   }
 
   function getKota(e, { value }) {
-    setSelectedProvinsi(e.target.textContent)
     setIdProvinsi(value)
-
     axios
       .get(`http://marketplace-express.herokuapp.com/provinsi/${value}/kota`)
-      .then((response) => {
-        setKota(response.data)
+      .then(response => {
+        setKumpulanKota(response.data)
       })
   }
 
   function getSelectedKota(e, { value }) {
-    setSelectedKota(e.target.textContent)
     setIdKota(value)
   }
 
@@ -60,7 +67,7 @@ export default function Ongkir(props) {
     }
     axios
       .post('https://marketplace-express.herokuapp.com/ongkir', isi)
-      .then((response) => {
+      .then(response => {
         if (response.data.error) {
           setError(true)
           setOngkos(0)
@@ -77,32 +84,10 @@ export default function Ongkir(props) {
         ongkir: ongkos,
         kota_asal: 256,
         kota_tujuan: idKota,
-        detail_alamat: detail_alamat,
+        detail_alamat: detailAlamat,
       })
       .then(() => props.history.push('/transaksi'))
   }
-
-  const optionProvinsi = provinsi.map((provinsi) => ({
-    key: provinsi.id_provinsi,
-    text: provinsi.provinsi,
-    value: provinsi.id_provinsi,
-  }))
-
-  const optionKota = kota.map((kota) => {
-    if (kota.tipe === 'Kabupaten') {
-      return {
-        key: kota.id_kota,
-        text: kota.tipe + ' ' + kota.kota,
-        value: kota.id_kota,
-      }
-    } else {
-      return {
-        key: kota.id_kota,
-        text: kota.kota,
-        value: kota.id_kota,
-      }
-    }
-  })
 
   return (
     <Container>
@@ -126,6 +111,7 @@ export default function Ongkir(props) {
                 selection
                 options={optionProvinsi}
                 onChange={getKota}
+                value={idProvinsi}
               />
             </Grid.Column>
 
@@ -137,6 +123,7 @@ export default function Ongkir(props) {
                 selection
                 options={optionKota}
                 onChange={getSelectedKota}
+                value={idKota}
               />
             </Grid.Column>
             <Grid.Column width="3">
@@ -145,11 +132,11 @@ export default function Ongkir(props) {
               </Button>
             </Grid.Column>
           </Grid.Row>
-          {ongkos > 0 && (
+          {ongkos && (
             <>
               <Grid.Row>
                 <Grid.Column>
-                  <Header content="JNE REGULAR" subheader={'Rp. ' + ongkos} />
+                  <Header content="JNE REGULAR" subheader={`Rp. ${ongkos}`} />
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
@@ -157,7 +144,7 @@ export default function Ongkir(props) {
                   <Input
                     type="text"
                     label="Alamat"
-                    value={detail_alamat}
+                    value={detailAlamat}
                     onChange={changeDetailAlamat}
                   />
                 </Grid.Column>
