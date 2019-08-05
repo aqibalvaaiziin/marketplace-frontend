@@ -162,7 +162,10 @@ export default function Ongkir(props) {
           {error && (
             <Grid.Row>
               <Grid.Column>
-                <Header content="JNE REG Tidak Tersedia" />
+                <Header
+                  content="JNE REG Tidak Tersedia"
+                  subheader={`Rp. ${ongkos}`}
+                />
               </Grid.Column>
             </Grid.Row>
           )}
