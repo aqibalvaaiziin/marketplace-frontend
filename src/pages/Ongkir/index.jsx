@@ -61,8 +61,8 @@ export default function Ongkir(props) {
 
   function hitungOngkir() {
     const isi = {
-      asal: 256,
-      tujuan: idKota,
+      kota_asal: 256,
+      kota_tujuan: idKota,
       berat: props.location.state.totalBerat,
     }
     axios
