@@ -6,6 +6,9 @@ import DetailProduk from './pages/DetailProduk'
 import Keranjang from './pages/Keranjang'
 import { LogTransaksi, DetailTransaksi } from './pages/Transaksi'
 import Ongkir from './pages/Ongkir'
+import Daftar from './pages/SignUp/index'
+import UserDropdown from './component/UserDropdown/UserDropdown';
+import Profile from './pages/Profile';
 
 const routes = [
   {
@@ -47,6 +50,20 @@ const routes = [
     label: 'Ongkir',
     hide: true,
   },
+  {
+    path: '/daftar',
+    component: Daftar,
+    name: 'daftar',
+    label: 'Daftar',
+    hide:true
+  }, 
+  {
+    path: '/profile',
+    component: Profile,
+    name: 'Profile',
+    label: 'Profile',
+    hide:true
+  },
 ]
 
 function App() {
@@ -78,6 +95,8 @@ function App() {
         )}
       </Menu>
 
+      <UserDropdown />
+      
       {routes.map(route => (
         <Route
           path={route.path}
