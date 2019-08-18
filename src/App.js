@@ -6,6 +6,10 @@ import DetailProduk from './pages/DetailProduk'
 import Keranjang from './pages/Keranjang'
 import { LogTransaksi, DetailTransaksi } from './pages/Transaksi'
 import Ongkir from './pages/Ongkir'
+import Daftar from './pages/SignUp/index'
+import UserDropdown from './component/UserDropdown/UserDropdown';
+import Profile from './pages/Profile';
+import Login from './pages/SignIn/index';
 
 const routes = [
   {
@@ -47,7 +51,29 @@ const routes = [
     label: 'Ongkir',
     hide: true,
   },
+  {
+    path: '/daftar',
+    component: Daftar,
+    name: 'daftar',
+    label: 'Daftar',
+    hide:true
+  }, 
+  {
+    path: '/login',
+    component: Login,
+    name: 'login',
+    label: 'Login',
+    hide:true
+  }, 
+  {
+    path: '/profile',
+    component: Profile,
+    name: 'Profile',
+    label: 'Profile',
+    hide:true
+  },
 ]
+
 
 function App() {
   const [activeRoute, setActiveRoute] = useState(window.location.pathname)
@@ -78,6 +104,8 @@ function App() {
         )}
       </Menu>
 
+      <UserDropdown />
+      
       {routes.map(route => (
         <Route
           path={route.path}
