@@ -10,6 +10,7 @@ import Daftar from './pages/SignUp/index'
 import UserDropdown from './component/UserDropdown/UserDropdown';
 import Profile from './pages/Profile';
 import Login from './pages/SignIn/index';
+import jwt from 'jsonwebtoken';
 
 const routes = [
   {
@@ -56,65 +57,85 @@ const routes = [
     component: Daftar,
     name: 'daftar',
     label: 'Daftar',
-    hide:true
+    hide:true,
   }, 
   {
     path: '/login',
     component: Login,
     name: 'login',
     label: 'Login',
-    hide:true
+    hide:true,
   }, 
   {
     path: '/profile',
     component: Profile,
     name: 'Profile',
     label: 'Profile',
-    hide:true
+    hide:true,
   },
 ]
 
+const UserContext = React.createContext();
+
 
 function App() {
-  const [activeRoute, setActiveRoute] = useState(window.location.pathname)
+  const [activeRoute, setActiveRoute] = useState(window.location.pathname);
+  const [tokenValue, setTokenValue] = useState(localStorage.getItem("authToken"))
+
+  
+  function isLoggedIn(){
+    return tokenValue !== "";
+  }
+
+  function getPengguna(){
+    return jwt.decode(tokenValue)
+  }
+
+  const providerValue = {
+    token : tokenValue,
+    pengguna : getPengguna(),
+    isLoggin: isLoggedIn()
+  }
 
   function isActive(route) {
     return activeRoute === route.name || window.location.pathname === route.path
   }
 
   return (
-    <BrowserRouter>
-      <Menu secondary pointing>
-        <Link to="/" onClick={() => setActiveRoute('/')}>
-          <Menu.Item header>Marketplace Koperasi</Menu.Item>
-        </Link>
-        {routes.map(
-          route =>
-            !route.hide && (
-              <Link to={route.path} key={route.name}>
-                <Menu.Item
-                  as="div"
-                  name={route.name}
-                  active={isActive(route)}
-                  onClick={(e, { name }) => setActiveRoute(name)}>
-                  {route.label}
-                </Menu.Item>
-              </Link>
-            ),
-        )}
-      </Menu>
+    <UserContext.Provider value={providerValue} >
+      <BrowserRouter>
+        <Menu secondary pointing>
+          <Link to="/" onClick={() => setActiveRoute('/')}>
+            <Menu.Item header>Marketplace Koperasi</Menu.Item>
+          </Link>
+          {routes.map(
+            route =>
+              !route.hide && (
+                <Link to={route.path} key={route.name}>
+                  <Menu.Item
+                    as="div"
+                    name={route.name}
+                    active={isActive(route)}
+                    onClick={(e, { name }) => setActiveRoute(name)}>
+                    {route.label}
+                  </Menu.Item>
+                </Link>
+              ),
+          )}
+        </Menu>
 
-      <UserDropdown />
-      
-      {routes.map(route => (
-        <Route
-          path={route.path}
-          exact
-          component={route.component}
-          key={route.name}
-        />
-      ))}
-    </BrowserRouter>
+        <UserDropdown />
+        
+        {routes.map(route => (
+          <Route
+            path={route.path}
+            exact
+            component={route.component}
+            key={route.name}
+          />
+        ))}
+      </BrowserRouter>
+    </UserContext.Provider>
   )
 }
 
