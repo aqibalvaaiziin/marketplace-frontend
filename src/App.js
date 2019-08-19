@@ -7,10 +7,10 @@ import Keranjang from './pages/Keranjang'
 import { LogTransaksi, DetailTransaksi } from './pages/Transaksi'
 import Ongkir from './pages/Ongkir'
 import Daftar from './pages/SignUp/index'
-import UserDropdown from './component/UserDropdown/UserDropdown';
-import Profile from './pages/Profile';
-import Login from './pages/SignIn/index';
-import jwt from 'jsonwebtoken';
+import UserDropdown from './component/UserDropdown/UserDropdown'
+import Profile from './pages/Profile'
+import Login from './pages/SignIn/index'
+import jwt from 'jsonwebtoken'
 
 const routes = [
   {
@@ -75,26 +75,44 @@ const routes = [
   },
 ]
 
-const UserContext = React.createContext();
+export const UserContext = React.createContext()
 
 
 function App() {
-  const [activeRoute, setActiveRoute] = useState(window.location.pathname);
-  const [tokenValue, setTokenValue] = useState(localStorage.getItem("authToken"))
-
+  const [activeRoute, setActiveRoute] = useState(window.location.pathname)
+  const [userData, setUserData] = useState({
+    token:localStorage.getItem('authToken'),
+    user: getPengguna() 
+  })
   
   function isLoggedIn(){
-    return tokenValue !== "";
+    return userData.token !== ''
   }
 
   function getPengguna(){
-    return jwt.decode(tokenValue)
+    return jwt.decode(userData.token)
+  }
+
+  function login(token,user){
+    setUserData({ token,user },() => {
+      localStorage.setItem('authToken',token)
+      localStorage.setItem('authUser',JSON.stringify(getPengguna()))
+    })
+  }
+  
+  function logout(){
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('authUser')
+    setUserData({token:undefined , user: undefined})
+    window.location.href= '/'
   }
 
   const providerValue = {
-    token : tokenValue,
-    pengguna : getPengguna(),
-    isLoggin: isLoggedIn()
+    token : userData.token,
+    pengguna : userData.user,
+    isLoggin: isLoggedIn(),
+    login : login(),
+    logout : logout(),
   }
 
   function isActive(route) {

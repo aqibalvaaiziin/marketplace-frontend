@@ -1,23 +1,87 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Input, Header, Icon, Button } from 'semantic-ui-react'
+import { UserContext } from '../../App'
+import axios from 'axios'
+import { reject } from 'q'
 
-function index() {
+function index(props) {
+  const [input, setInput] = useState({
+    username: '',
+    password: ''
+  })
+
+  const url = 'https://marketplace-express.herokuapp.com/pengguna/login'
+
+  function login(value) {
+    axios.post(url, { input })
+      .then(res => {
+        if (res.data) {
+          value.login(res.data.token, res.data.user, () => {
+            props.history.push('/')
+          })
+        }
+        else {
+          resetValue()
+          // eslint-disable-next-line no-alert
+          alert('Username atau password anda salah')
+        }
+      })
+      .catch(error => reject(error))
+  }
+
+  function resetValue() {
+    input.password = ''
+    setInput(input.password = input)
+  }
+
+  function changeValue(value, name) {
+    input[name] = value
+    setInput({ input })
+  }
+
+  function redirectIfAuthenticated(isLoggin) {
+    if (isLoggin) props.history.push('/')
+  }
+
   return (
-    <div>
-      <Header as='h1' icon textAlign='center' style={styles.iconPosition}>
-        <Icon name='user circle' />
-        <Header.Content>Log In</Header.Content>
-      </Header>
-      <div style={styles.centered}>
-        <div style={styles.box}>
-          <Input fluid icon='user' iconPosition='left' placeholder='Username' />
-          <Input fluid icon='lock' iconPosition='left' placeholder='Password' />
-          <Button positive>Daftar</Button>
-          <p style={styles.textLink}>Kembali Ke Toko ?</p>
-        </div>
-      </div>
-    </div>
+    <UserContext.Consumer>
+      {
+        value => {
+          redirectIfAuthenticated(value.isLoggin)
+          return (
+            <div>
+              <Header as='h1' icon textAlign='center' style={styles.iconPosition}>
+                <Icon name='user circle' />
+                <Header.Content>Log In</Header.Content>
+              </Header>
+              <div style={styles.centered}>
+                <div style={styles.box}>
+                  <Input fluid
+                    icon='user'
+                    iconPosition='left'
+                    placeholder='Username'
+                    onChange={event => changeValue(event.target.value, 'username')}
+                  />
+                  <Input fluid
+                    icon='lock'
+                    iconPosition='left'
+                    placeholder='Password'
+                    onChange={event => changeValue(event.target.value, 'password')}
+                  />
+                  <Button positive
+                    onClick={() => login(value)}
+                  >Daftar</Button>
+                  <p style={styles.textLink}>Kembali Ke Toko ?</p>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      }
+    </UserContext.Consumer>
+
   )
+
 }
 
 export default index
