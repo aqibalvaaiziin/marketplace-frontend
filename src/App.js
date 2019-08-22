@@ -9,8 +9,8 @@ import Ongkir from './pages/Ongkir'
 import Daftar from './pages/SignUp/index'
 import UserDropdown from './component/UserDropdown/UserDropdown'
 import Profile from './pages/Profile'
-import Login from './pages/SignIn/index'
 import jwt from 'jsonwebtoken'
+import SignIn from './pages/SignIn/index'
 
 const routes = [
   {
@@ -61,7 +61,7 @@ const routes = [
   }, 
   {
     path: '/login',
-    component: Login,
+    component: SignIn,
     name: 'login',
     label: 'Login',
     hide:true,
@@ -81,26 +81,26 @@ export const UserContext = React.createContext()
 function App() {
   const [activeRoute, setActiveRoute] = useState(window.location.pathname)
   const [userData, setUserData] = useState({
-    token:localStorage.getItem('authToken'),
-    user: getPengguna() 
+    token : localStorage.getItem('authToken') || '',
+    user  :JSON.parse(localStorage.getItem('authUser') || '{}')
   })
   
-  function isLoggedIn(){
-    return userData.token !== ''
-  }
 
-  function getPengguna(){
-    return jwt.decode(userData.token)
-  }
+  const isLoggedIn = () => userData.token ? true : false 
 
-  function login(token,user){
-    setUserData({ token,user },() => {
-      localStorage.setItem('authToken',token)
-      localStorage.setItem('authUser',JSON.stringify(getPengguna()))
+  const decodeData = jwt.decode(userData.token)
+  
+  const getPengguna = () => setUserData({user: JSON.stringify(decodeData)})
+  
+  const login = (token,user) => {
+    setUserData({
+      token: localStorage.setItem('authToken',token),
+      user: localStorage.setItem('authUser', user)
     })
   }
+
   
-  function logout(){
+  const logout = () => {
     localStorage.removeItem('authToken')
     localStorage.removeItem('authUser')
     setUserData({token:undefined , user: undefined})
@@ -110,9 +110,9 @@ function App() {
   const providerValue = {
     token : userData.token,
     pengguna : userData.user,
-    isLoggin: isLoggedIn(),
-    login : login(),
-    logout : logout(),
+    isLoggin: () => isLoggedIn(),
+    loginData : () => login(userData.token,getPengguna()),
+    logoutData : () => logout(),
   }
 
   function isActive(route) {

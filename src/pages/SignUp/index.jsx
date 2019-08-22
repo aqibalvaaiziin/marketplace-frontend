@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, Header, Icon, Button } from 'semantic-ui-react'
 
-function index() {
+function SignUp() {
   return (
     <div>
       <Header as='h1' icon textAlign='center' style={styles.iconPosition}>
@@ -21,7 +21,7 @@ function index() {
   )
 }
 
-export default index
+export default SignUp
 
 const styles = {
   centered: {

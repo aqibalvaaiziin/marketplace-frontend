@@ -4,7 +4,8 @@ import { UserContext } from '../../App'
 import axios from 'axios'
 import { reject } from 'q'
 
-function index(props) {
+function SignIn(props) {
+
   const [input, setInput] = useState({
     username: '',
     password: ''
@@ -25,8 +26,7 @@ function index(props) {
           // eslint-disable-next-line no-alert
           alert('Username atau password anda salah')
         }
-      })
-      .catch(error => reject(error))
+      }).catch(error => reject(error))
   }
 
   function resetValue() {
@@ -79,12 +79,10 @@ function index(props) {
         }
       }
     </UserContext.Consumer>
-
   )
-
 }
 
-export default index
+export default SignIn
 
 const styles = {
   centered: {
