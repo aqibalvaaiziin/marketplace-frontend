@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import {
   Container,
@@ -10,8 +10,10 @@ import {
   Grid,
   Input,
 } from 'semantic-ui-react'
+import { UserContext } from '../../App'
 
 export default function Ongkir(props) {
+  const context = useContext(UserContext)
   const [kumpulanProvinsi, setKumpulanProvinsi] = useState([])
   const [kumpulanKota, setKumpulanKota] = useState([])
   const [idKota, setIdKota] = useState()
@@ -60,13 +62,12 @@ export default function Ongkir(props) {
   }
 
   function hitungOngkir() {
-    const isi = {
-      asal: 256,
-      tujuan: idKota,
-      berat: props.location.state.totalBerat,
-    }
     axios
-      .post('https://marketplace-express.herokuapp.com/ongkir', isi)
+      .post('https://marketplace-express.herokuapp.com/ongkir', {
+        kota_asal: 256,
+        kota_tujuan: idKota,
+        berat: props.location.state.totalBerat,
+      })
       .then(response => {
         if (response.data.error) {
           setError(true)
@@ -80,12 +81,16 @@ export default function Ongkir(props) {
 
   function bayar() {
     axios
-      .post('https://marketplace-express.herokuapp.com/transaksi', {
-        ongkir: ongkos,
-        kota_asal: 256,
-        kota_tujuan: idKota,
-        detail_alamat: detailAlamat,
-      })
+      .post(
+        'https://marketplace-express.herokuapp.com/transaksi',
+        {
+          ongkir: ongkos,
+          kota_asal: 256,
+          kota_tujuan: idKota,
+          detail_alamat: detailAlamat,
+        },
+        { headers: { Authorization: `Bearer ${context.token}` } },
+      )
       .then(() => props.history.push('/transaksi'))
   }
 

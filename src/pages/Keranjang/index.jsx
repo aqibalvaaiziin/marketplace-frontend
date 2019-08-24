@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { UserContext } from '../../App'
 import { Container, Table, Button, Header } from 'semantic-ui-react'
 import axios from 'axios'
 import InputJumlah from './InputJumlah'
 import { Link } from 'react-router-dom'
 
 export default function Keranjang() {
+  const context = useContext(UserContext)
   const [kumpulanKeranjang, setKumpulanKeranjang] = useState([])
 
   useEffect(() => {
@@ -13,7 +15,9 @@ export default function Keranjang() {
 
   function getKeranjang() {
     axios
-      .get('https://marketplace-express.herokuapp.com/keranjang')
+      .get('https://marketplace-express.herokuapp.com/keranjang', {
+        headers: { Authorization: `Bearer ${context.token}` },
+      })
       .then(response => setKumpulanKeranjang(response.data))
   }
 
@@ -22,6 +26,9 @@ export default function Keranjang() {
       .put(
         `https://marketplace-express.herokuapp.com/keranjang/${id_keranjang}`,
         { jumlah },
+        {
+          headers: { Authorization: `Bearer ${context.token}` },
+        },
       )
       .then(() => getKeranjang())
   }

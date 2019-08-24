@@ -1,57 +1,48 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Dropdown } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import Profile from '../../pages/Profile';
+import Profil from '../../pages/Profil'
+import { LogTransaksi } from '../../pages/Transaksi'
+import { UserContext } from '../../App'
+import Keranjang from '../../pages/Keranjang'
 
-const routes =[
+const routes = [
   {
-    path: '/profile',
-    component: Profile,
-    name: 'Profile',
-    label: 'Profile',
+    path: '/keranjang',
+    component: Keranjang,
+    name: 'keranjang',
+    label: 'Keranjang',
   },
   {
     path: '/transaksi',
-    component: 'logTransaksi',
-    name: 'log',
-    label: 'log',
+    component: LogTransaksi,
+    name: 'logTransaksi',
+    label: 'Log Transaksi',
+  },
+  {
+    path: '/profil',
+    component: Profil,
+    name: 'profil',
+    label: 'Profil',
+    hide: true,
+    private: true,
   },
 ]
 
 function UserDropdown() {
-
+  const context = useContext(UserContext)
   return (
-    <div style={styles.dropDown}>
-      <Dropdown icon='user' direction='left'>
-        <Dropdown.Menu>
-        {
-          routes.map(
-            route =>(
-              <Dropdown.Item key={route.name} >
-                <Link to={route.path} style={styles.textColor}>
-                    {route.label}
-                </Link>
-              </Dropdown.Item>
-            )
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
-    </div>
+    <Dropdown text={context.getPengguna().nama} basic>
+      <Dropdown.Menu>
+        {routes.map(route => (
+          <Link to={route.path} key={route.name}>
+            <Dropdown.Item>{route.label}</Dropdown.Item>
+          </Link>
+        ))}
+        <Dropdown.Item onClick={context.logout}>Logout</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
   )
 }
 
 export default UserDropdown
-
-const styles = {
-  dropDown: {
-    position:'absolute',
-    top:'3%',
-    left:'98%',
-    transform:'translate(-2%,-98%)',
-  },
-  textColor:{
-    color:'black',
-    fontSize:'14px',
-    fontWeight:'600'
-  }
-}
