@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Menu, Button } from 'semantic-ui-react'
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import Beranda from './pages/Beranda'
 import DetailProduk from './pages/DetailProduk'
 import Keranjang from './pages/Keranjang'
 import { LogTransaksi, DetailTransaksi } from './pages/Transaksi'
 import Ongkir from './pages/Ongkir'
-import Daftar from './pages/SignUp/index'
+import Daftar from './pages/Daftar'
+import PrivateRoute from './component/PrivateRoute'
 import UserDropdown from './component/UserDropdown/UserDropdown'
-import Profile from './pages/Profile'
+import Profil from './pages/Profil'
 import jwt from 'jsonwebtoken'
-import SignIn from './pages/SignIn/index'
+import Masuk from './pages/Masuk/'
 
 const routes = [
   {
@@ -24,6 +25,8 @@ const routes = [
     component: Keranjang,
     name: 'keranjang',
     label: 'Keranjang',
+    private: true,
+    hide: true,
   },
   {
     path: '/detail-produk',
@@ -37,6 +40,8 @@ const routes = [
     component: LogTransaksi,
     name: 'logTransaksi',
     label: 'Log Transaksi',
+    private: true,
+    hide: true,
   },
   {
     path: '/transaksi/detail',
@@ -44,6 +49,7 @@ const routes = [
     name: 'detailTransaksi',
     label: 'Detail Transaksi',
     hide: true,
+    private: true,
   },
   {
     path: '/ongkir',
@@ -51,107 +57,129 @@ const routes = [
     name: 'ongkir',
     label: 'Ongkir',
     hide: true,
+    private: true,
   },
   {
     path: '/daftar',
     component: Daftar,
     name: 'daftar',
     label: 'Daftar',
-    hide:true,
-  }, 
+    hide: true,
+  },
   {
-    path: '/login',
-    component: SignIn,
-    name: 'login',
-    label: 'Login',
-    hide:true,
-  }, 
+    path: '/masuk',
+    component: Masuk,
+    name: 'masuk',
+    label: 'Masuk',
+    hide: true,
+  },
   {
-    path: '/profile',
-    component: Profile,
-    name: 'Profile',
-    label: 'Profile',
-    hide:true,
+    path: '/profil',
+    component: Profil,
+    name: 'profil',
+    label: 'Profil',
+    hide: true,
+    private: true,
   },
 ]
 
 export const UserContext = React.createContext()
 
-
 function App() {
   const [activeRoute, setActiveRoute] = useState(window.location.pathname)
-  const [userData, setUserData] = useState({
-    token : localStorage.getItem('authToken') || '',
-    user  :JSON.parse(localStorage.getItem('authUser') || '{}')
-  })
-  
+  const [token, setToken] = useState(localStorage.getItem('token') || '')
 
-  const isLoggedIn = () => userData.token ? true : false 
-
-  const decodeData = jwt.decode(userData.token)
-  
-  const getPengguna = () => setUserData({user: JSON.stringify(decodeData)})
-  
-  const login = (token,user) => {
-    setUserData({
-      token: localStorage.setItem('authToken',token),
-      user: localStorage.setItem('authUser', user)
-    })
+  function isLoggedIn() {
+    return token !== ''
   }
 
-  
-  const logout = () => {
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('authUser')
-    setUserData({token:undefined , user: undefined})
-    window.location.href= '/'
+  function getPengguna() {
+    return jwt.decode(token)
   }
 
-  const providerValue = {
-    token : userData.token,
-    pengguna : userData.user,
-    isLoggin: () => isLoggedIn(),
-    loginData : () => login(userData.token,getPengguna()),
-    logoutData : () => logout(),
+  function login(token) {
+    localStorage.setItem('token', token)
+    setToken(token)
+  }
+
+  function logout() {
+    localStorage.removeItem('token')
+    setToken('')
+    window.location.href = '/'
   }
 
   function isActive(route) {
     return activeRoute === route.name || window.location.pathname === route.path
   }
 
+  function renderRoutes() {
+    return routes.map(route =>
+      route.private ? (
+        <PrivateRoute
+          path={route.path}
+          exact
+          component={route.component}
+          key={route.name}
+        />
+      ) : (
+        <Route
+          path={route.path}
+          exact
+          component={route.component}
+          key={route.name}
+        />
+      ),
+    )
+  }
+
+  function renderMenuItems() {
+    return routes.map(
+      route =>
+        !route.hide && (
+          <Link to={route.path} key={route.name}>
+            <Menu.Item
+              as="div"
+              name={route.name}
+              active={isActive(route)}
+              onClick={(e, { name }) => setActiveRoute(name)}>
+              {route.label}
+            </Menu.Item>
+          </Link>
+        ),
+    )
+  }
+
+  const providerValue = {
+    token,
+    setToken,
+    getPengguna,
+    isLoggedIn,
+    login,
+    logout,
+  }
+
   return (
-    <UserContext.Provider value={providerValue} >
+    <UserContext.Provider value={providerValue}>
       <BrowserRouter>
         <Menu secondary pointing>
           <Link to="/" onClick={() => setActiveRoute('/')}>
             <Menu.Item header>Marketplace Koperasi</Menu.Item>
           </Link>
-          {routes.map(
-            route =>
-              !route.hide && (
-                <Link to={route.path} key={route.name}>
-                  <Menu.Item
-                    as="div"
-                    name={route.name}
-                    active={isActive(route)}
-                    onClick={(e, { name }) => setActiveRoute(name)}>
-                    {route.label}
-                  </Menu.Item>
+          {renderMenuItems()}
+          <Menu.Menu position="right">
+            <Menu.Item>
+              {isLoggedIn() ? (
+                <UserDropdown />
+              ) : (
+                <Link to="/masuk">
+                  <Button content="Masuk" color="green" />
                 </Link>
-              ),
-          )}
+              )}
+            </Menu.Item>
+          </Menu.Menu>
         </Menu>
 
-        <UserDropdown />
-        
-        {routes.map(route => (
-          <Route
-            path={route.path}
-            exact
-            component={route.component}
-            key={route.name}
-          />
-        ))}
+        {renderRoutes()}
       </BrowserRouter>
     </UserContext.Provider>
   )

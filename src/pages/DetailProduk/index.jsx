@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { UserContext } from '../../App'
 import {
   Container,
   Image,
@@ -11,15 +12,20 @@ import {
 import axios from 'axios'
 
 function DetailProduk(props) {
+  const context = useContext(UserContext)
   const [produk] = useState(props.location.state)
   const [jumlah, setJumlah] = useState(1)
 
   function addKeranjang() {
     axios
-      .post('https://marketplace-express.herokuapp.com/keranjang', {
-        id_produk: produk.id_produk,
-        jumlah,
-      })
+      .post(
+        'https://marketplace-express.herokuapp.com/keranjang',
+        {
+          id_produk: produk.id_produk,
+          jumlah,
+        },
+        { headers: { Authorization: `Bearer ${context.token}` } },
+      )
       .then(() => props.history.push('/keranjang'))
   }
 

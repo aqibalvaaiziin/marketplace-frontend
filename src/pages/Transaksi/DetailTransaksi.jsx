@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   Header,
   Icon,
@@ -9,17 +9,18 @@ import {
   Button,
 } from 'semantic-ui-react'
 import axios from 'axios'
+import { UserContext } from '../../App'
 
 function DetailTransaksi(props) {
+  const context = useContext(UserContext)
   const [kumpulanDetailTransaksi, setKumpulanDetailTransaksi] = useState([])
   const [selectedFile, setSelectedFile] = useState(null)
 
   useEffect(() => {
     axios
       .get(
-        `https://marketplace-express.herokuapp.com/transaksi/${
-          props.location.state
-        }/detail`,
+        `https://marketplace-express.herokuapp.com/transaksi/${props.location.state}/detail`,
+        { headers: { Authorization: `Bearer ${context.token}` } },
       )
       .then(res => setKumpulanDetailTransaksi(res.data))
   })
@@ -29,13 +30,12 @@ function DetailTransaksi(props) {
     fd.append('bukti_bayar', selectedFile)
     axios
       .put(
-        `https://marketplace-express.herokuapp.com/transaksi/${
-          props.location.state
-        }`,
+        `https://marketplace-express.herokuapp.com/transaksi/${props.location.state}`,
         fd,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${context.token}`,
           },
         },
       )
