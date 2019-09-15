@@ -50,7 +50,9 @@ function LogTransaksi(props) {
           )
         })
       ) : (
-        <Header as="h2">Transaksi Kosong</Header>
+        <Container style={styles.marginCard}> 
+          <Header as="h2">Transaksi Kosong</Header>
+        </Container>
       )}
     </>
   )

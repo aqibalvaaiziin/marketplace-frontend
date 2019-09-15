@@ -1,5 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { UserContext } from '../../App'
+import { Link } from 'react-router-dom'
 import {
   Container,
   Image,
@@ -14,8 +15,15 @@ import axios from 'axios'
 
 function DetailProduk(props) {
   const context = useContext(UserContext)
+  const usahaPengguna = context.getPengguna().usaha.id_usaha
   const [produk] = useState(props.location.state)
+  const [usaha, setUsaha] = useState({})
   const [jumlah, setJumlah] = useState(1)
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/usaha/${produk.id_usaha}`)
+    .then(res => setUsaha(res.data))
+  }, [])
 
   function addKeranjang() {
     axios
@@ -95,15 +103,21 @@ function DetailProduk(props) {
         <Grid.Column>
           <Grid columns={2} celled="internally" verticalAlign="middle">
             <Grid.Column>
+              {
+                usaha && (
                   <Header
                     size="tiny"
                     icon="warehouse"
-                    content={produk.usaha.nama}
+                    content={usaha.nama}
                     floated="right"
                   />
+                )
+              }
                 </Grid.Column>
                 <Grid.Column>
-                <Button color="instagram" size="medium" floated='left'>Kunjungi Toko</Button>
+                <Link to={{ pathname: '/usaha', state: usahaPengguna }}>
+                  <Button color="instagram" size="medium" floated='left'>Kunjungi Toko</Button>
+                </Link>
               </Grid.Column>
           </Grid>
         </Grid.Column>

@@ -12,6 +12,7 @@ import UserDropdown from './component/UserDropdown/UserDropdown'
 import Profil from './pages/Profil'
 import jwt from 'jsonwebtoken'
 import Masuk from './pages/Masuk/'
+import Usaha from './pages/Usaha'
 
 const routes = [
   {
@@ -79,6 +80,13 @@ const routes = [
     name: 'profil',
     label: 'Profil',
     hide: true,
+    private: true,
+  },
+  {
+    path: '/usaha',
+    component: Usaha,
+    name: 'usaha',
+    label: 'Usaha',
     private: true,
   },
 ]
