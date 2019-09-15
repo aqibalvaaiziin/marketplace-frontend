@@ -13,6 +13,7 @@ import Profil from './pages/Profil'
 import jwt from 'jsonwebtoken'
 import Masuk from './pages/Masuk/'
 import DaftarUsaha from './pages/DaftarUsaha'
+import Usaha from './pages/Usaha'
 
 const routes = [
   {
@@ -89,7 +90,14 @@ const routes = [
     label: 'DaftarUsaha',
     hide: true,
     private: true,
-  }
+  },
+  {
+    path: '/usaha',
+    component: Usaha,
+    name: 'usaha',
+    label: 'Usaha',
+    private: true,
+  },
 ]
 
 export const UserContext = React.createContext()

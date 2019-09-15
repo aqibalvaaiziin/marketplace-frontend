@@ -51,7 +51,7 @@ export default function Ongkir(props) {
   function getKota(e, { value }) {
     setIdProvinsi(value)
     axios
-      .get(`http://marketplace-express.herokuapp.com/provinsi/${value}/kota`)
+      .get(`http://marketplace-backend-app.herokuapp.com/provinsi/${value}/kota`)
       .then(response => {
         setKumpulanKota(response.data)
       })
