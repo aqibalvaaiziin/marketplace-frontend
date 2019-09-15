@@ -9,7 +9,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get('https://marketplace-express.herokuapp.com/produk')
+      .get('http://localhost:8000/produk')
       .then(res => setKumpulanProduk(res.data))
   }, [])
 

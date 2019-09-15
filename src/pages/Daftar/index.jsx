@@ -19,7 +19,7 @@ function Daftar(props) {
   function register() {
     const { konfirmasi_password, ...rest } = input
     axios
-      .post('https://marketplace-express.herokuapp.com/pengguna', rest)
+      .post('http://localhost:8000/pengguna', rest)
       .then(response => props.history.push('/masuk'))
   }
 

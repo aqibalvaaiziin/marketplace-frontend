@@ -10,7 +10,7 @@ function LogTransaksi(props) {
 
   useEffect(() => {
     axios
-      .get('https://marketplace-express.herokuapp.com/transaksi', {
+      .get('http://localhost:8000/transaksi', {
         headers: { Authorization: `Bearer ${context.token}` },
       })
       .then(res => setKumpulanTransaksi(res.data))
