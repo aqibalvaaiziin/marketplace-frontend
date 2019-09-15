@@ -44,7 +44,7 @@ export default function Ongkir(props) {
 
   function getProvinsi() {
     axios
-      .get('https://marketplace-express.herokuapp.com/provinsi')
+      .get('http://localhost:8000/provinsi')
       .then(response => setKumpulanProvinsi(response.data))
   }
 
@@ -63,7 +63,7 @@ export default function Ongkir(props) {
 
   function hitungOngkir() {
     axios
-      .post('https://marketplace-express.herokuapp.com/ongkir', {
+      .post('http://localhost:8000/ongkir', {
         kota_asal: 256,
         kota_tujuan: idKota,
         berat: props.location.state.totalBerat,
@@ -82,7 +82,7 @@ export default function Ongkir(props) {
   function bayar() {
     axios
       .post(
-        'https://marketplace-express.herokuapp.com/transaksi',
+        'http://localhost:8000/transaksi',
         {
           ongkir: ongkos,
           kota_asal: 256,

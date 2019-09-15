@@ -21,7 +21,7 @@ function Masuk(props) {
 
   function login() {
     axios
-      .post('https://marketplace-express.herokuapp.com/pengguna/login', input)
+      .post('http://localhost:8000/pengguna/login', input)
       .then(res => {
         if (res.data.success) {
           context.login(res.data.token)

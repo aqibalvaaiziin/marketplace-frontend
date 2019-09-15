@@ -15,7 +15,7 @@ export default function Keranjang() {
 
   function getKeranjang() {
     axios
-      .get('https://marketplace-express.herokuapp.com/keranjang', {
+      .get('http://localhost:8000/keranjang', {
         headers: { Authorization: `Bearer ${context.token}` },
       })
       .then(response => setKumpulanKeranjang(response.data))
@@ -24,7 +24,7 @@ export default function Keranjang() {
   function changeJumlah(id_keranjang, jumlah) {
     axios
       .put(
-        `https://marketplace-express.herokuapp.com/keranjang/${id_keranjang}`,
+        `http://localhost:8000/keranjang/${id_keranjang}`,
         { jumlah },
         {
           headers: { Authorization: `Bearer ${context.token}` },

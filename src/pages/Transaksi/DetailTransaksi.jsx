@@ -19,7 +19,7 @@ function DetailTransaksi(props) {
   useEffect(() => {
     axios
       .get(
-        `https://marketplace-express.herokuapp.com/transaksi/${props.location.state}/detail`,
+        `http://localhost:8000/transaksi/${props.location.state}/detail`,
         { headers: { Authorization: `Bearer ${context.token}` } },
       )
       .then(res => setKumpulanDetailTransaksi(res.data))
@@ -30,7 +30,7 @@ function DetailTransaksi(props) {
     fd.append('bukti_bayar', selectedFile)
     axios
       .put(
-        `https://marketplace-express.herokuapp.com/transaksi/${props.location.state}`,
+        `http://localhost:8000/transaksi/${props.location.state}`,
         fd,
         {
           headers: {
