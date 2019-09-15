@@ -13,13 +13,14 @@ import axios from 'axios'
 
 function DetailProduk(props) {
   const context = useContext(UserContext)
+  console.log(context)
   const [produk] = useState(props.location.state)
   const [jumlah, setJumlah] = useState(1)
 
   function addKeranjang() {
     axios
       .post(
-        'https://marketplace-express.herokuapp.com/keranjang',
+        'http://localhost:8000/keranjang',
         {
           id_produk: produk.id_produk,
           jumlah,

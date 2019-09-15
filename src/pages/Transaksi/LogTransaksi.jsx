@@ -10,7 +10,7 @@ function LogTransaksi(props) {
 
   useEffect(() => {
     axios
-      .get('https://marketplace-express.herokuapp.com/transaksi', {
+      .get('http://localhost:8000/transaksi', {
         headers: { Authorization: `Bearer ${context.token}` },
       })
       .then(res => setKumpulanTransaksi(res.data))
@@ -50,7 +50,9 @@ function LogTransaksi(props) {
           )
         })
       ) : (
-        <Header as="h2">Transaksi Kosong</Header>
+        <Container style={styles.marginCard}> 
+          <Header as="h2">Transaksi Kosong</Header>
+        </Container>
       )}
     </>
   )
