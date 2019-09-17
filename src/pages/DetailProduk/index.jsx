@@ -15,7 +15,6 @@ import axios from 'axios'
 
 function DetailProduk(props) {
   const context = useContext(UserContext)
-  const usahaPengguna = context.getPengguna().usaha.id_usaha
   const [produk] = useState(props.location.state)
   const [usaha, setUsaha] = useState({})
   const [jumlah, setJumlah] = useState(1)
@@ -115,7 +114,7 @@ function DetailProduk(props) {
               }
                 </Grid.Column>
                 <Grid.Column>
-                <Link to={{ pathname: '/usaha', state: usahaPengguna }}>
+                <Link to={{ pathname: '/usaha', state: produk.usaha }}>
                   <Button color="instagram" size="medium" floated='left'>Kunjungi Toko</Button>
                 </Link>
               </Grid.Column>
