@@ -8,18 +8,22 @@ import axios from 'axios'
 
 function Usaha(props) {
     const context = useContext(UserContext)
-
+    let idUsaha
     const [usaha, setUsaha] = useState()
 
     useEffect(() => {
         console.log(props.location)
         if (!props.location.state) {
-            const idUsaha = context.getPengguna().usaha.id_usaha
-            axios
-            .get(`http://localhost:8000/usaha/${idUsaha}`)
-            .then(res => {
-                setUsaha(res.data)
-            })
+            if (context.getPengguna().usaha) {
+                idUsaha = context.getPengguna().usaha.id_usaha
+                axios
+                .get(`http://localhost:8000/usaha/${idUsaha}`)
+                .then(res => {
+                    setUsaha(res.data)
+                })
+            } else {
+                props.history.push('/')
+            }
         } else {
             axios
             .get(`http://localhost:8000/usaha/${props.location.state.id_usaha}`)
