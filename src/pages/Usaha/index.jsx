@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../Beranda/ProductCard'
-import { Container, Image, Grid, Header, Segment, Divider } from 'semantic-ui-react'
+import { Container, Image, Grid, Header, Segment, Divider, Button, Icon } from 'semantic-ui-react'
 import { UserContext } from '../../App'
 import axios from 'axios'
 
@@ -65,7 +65,8 @@ function Usaha(props) {
                     )
                 }
             </Segment>
-            <Divider horizontal style={styles.marginDivider}>Produk Usaha</Divider>
+            <Divider horizontal >Produk Usaha</Divider>
+            <Link to={{ pathname: '/tambahproduk'}}><Button color="green" icon style={styles.marginDivider}><Icon name="plus"></Icon> Tambah Produk</Button></Link>
             <Grid columns={5}>
                 {
                     usaha && (
@@ -95,7 +96,7 @@ const styles = {
         marginTop: '0'
     },
     marginDivider: {
-        marginTop: '50px',
+        marginTop: '10px',
         marginBottom: '50px'
     }
   }
