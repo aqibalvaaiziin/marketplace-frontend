@@ -14,6 +14,7 @@ import jwt from 'jsonwebtoken'
 import Masuk from './pages/Masuk/'
 import DaftarUsaha from './pages/DaftarUsaha'
 import Usaha from './pages/Usaha'
+import TambahProduk from './pages/TambahProduk'
 
 const routes = [
   {
@@ -98,6 +99,14 @@ const routes = [
     label: 'Usaha',
     private: true,
   },
+  {
+    path: '/tambahproduk',
+    component: TambahProduk,
+    name: 'tambahproduk',
+    label: 'TambahProduk',
+    hide: true,
+    private: true,
+  }
 ]
 
 export const UserContext = React.createContext()
