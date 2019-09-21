@@ -80,6 +80,11 @@ function TambahProduk(props) {
                             </Form.Group>
                             <Form.TextArea
                                 label="Deskripsi Produk"
+                                placeholder="Tes"
+                            />         
+                            <Form.Input
+                                label="Gambar Produk"
+                                type="file"
                                 onChange={event => changeValue(event.target.value, 'deskripsi')}
                                 value={input.deskripsi}
                             />                 
