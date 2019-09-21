@@ -8,21 +8,25 @@ import axios from 'axios'
 
 function Usaha(props) {
     const context = useContext(UserContext)
-
+    let idUsaha
     const [usaha, setUsaha] = useState()
 
     useEffect(() => {
         console.log(props.location)
         if (!props.location.state) {
-            const idUsaha = context.getPengguna().usaha.id_usaha
-            axios
-            .get(`http://localhost:8000/usaha/${idUsaha}`)
-            .then(res => {
-                setUsaha(res.data)
-            })
+            if (context.getPengguna().usaha) {
+                idUsaha = context.getPengguna().usaha.id_usaha
+                axios
+                .get(`http://localhost:8000/usaha/${idUsaha}`)
+                .then(res => {
+                    setUsaha(res.data)
+                })
+            } else {
+                props.history.push('/')
+            }
         } else {
             axios
-            .get(`http://localhost:8000/usaha/${props.location.state}`)
+            .get(`http://localhost:8000/usaha/${props.location.state.id_usaha}`)
             .then(res => setUsaha(res.data))
         }
     }, [])
@@ -43,14 +47,14 @@ function Usaha(props) {
                                 <Grid celled="internally" columns={2}>
                                     <Grid.Column>
                                         <Header size="medium">{usaha.nama}</Header>
-                                        <Header sub style={styles.noMargin}>Ini Slogan Saya masih placeholder yang penting maju jangan mundur ya</Header>
+                                        <Header sub style={styles.noMargin}>{usaha.slogan}</Header>
                                     </Grid.Column>
                                     <Grid.Column>
                                         <Header
                                             size="small"
                                             icon="map marker alternate"
                                             content="Alamat"
-                                            subheader="Bla Bla Bla"
+                                            subheader={usaha.nama_kota}
                                         />
                                         <Header
                                             size="small"

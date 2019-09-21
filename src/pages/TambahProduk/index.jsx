@@ -1,7 +1,39 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import { Container, Header, Icon, Card, Form } from 'semantic-ui-react'
+import { UserContext } from "../../App";
+import axios from "axios";
 
-function TambahProduk() {
+function TambahProduk(props) {
+    const context = useContext(UserContext)
+    const [input, setInput] = useState({
+        nama: '',
+        stok: 0,
+        harga: 0,
+        berat: 0,
+        deskripsi: ''
+    })
+
+    function changeValue(value, name) {
+        setInput({...input, [name]: value})
+    }
+
+    function addBarang() {
+        if (context.getPengguna().usaha) {
+            axios.post(`http://localhost:8000/usaha/${context.getPengguna().usaha.id_usaha}/produk`, 
+            input,
+            {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${context.token}`,
+                },
+            },
+            )
+            .then(res => {
+                props.history.push('/usaha')
+            })
+        }
+    }
+
     return (
         <Container style={{marginTop: "30px"}}>
             <Header as="h1" icon textAlign="center">
@@ -17,13 +49,15 @@ function TambahProduk() {
                                     fluid
                                     id="nama"
                                     label="Nama Produk"
-                                    placeholder="Tes"
+                                    onChange={event => changeValue(event.target.value, 'nama')}
+                                    value={input.nama}
                                 />
                                 <Form.Input
                                     fluid
                                     id="stok"
                                     label="Stok Produk"
-                                    placeholder="Tes"
+                                    onChange={event => changeValue(event.target.value, 'stok')}
+                                    value={input.stok}
                                 />
                             </Form.Group>
                             <Form.Group widths="equal">
@@ -31,15 +65,17 @@ function TambahProduk() {
                                     fluid
                                     id="harga"
                                     label="Harga Produk"
-                                    placeholder="Tes"
                                     icon="dollar sign"
                                     iconPosition="left"
+                                    onChange={event => changeValue(event.target.value, 'harga')}
+                                    value={input.harga}
                                 />
                                 <Form.Input
                                     fluid
                                     id="berat"
                                     label="Berat Produk"
-                                    placeholder="Tes"
+                                    onChange={event => changeValue(event.target.value, 'berat')}
+                                    value={input.berat}
                                 />
                             </Form.Group>
                             <Form.TextArea
@@ -49,10 +85,14 @@ function TambahProduk() {
                             <Form.Input
                                 label="Gambar Produk"
                                 type="file"
-                            />
+                                onChange={event => changeValue(event.target.value, 'deskripsi')}
+                                value={input.deskripsi}
+                            />                 
                             <Form.Button
                             color="green"
-                            size="medium">
+                            size="medium"
+                            onClick={addBarang}
+                            >
                                 Tambah Produk
                             </Form.Button>       
                         </Form>
