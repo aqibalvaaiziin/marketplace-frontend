@@ -45,7 +45,11 @@ function TambahProduk() {
                             <Form.TextArea
                                 label="Deskripsi Produk"
                                 placeholder="Tes"
-                            />                 
+                            />         
+                            <Form.Input
+                                label="Gambar Produk"
+                                type="file"
+                            />
                             <Form.Button
                             color="green"
                             size="medium">
