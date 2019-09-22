@@ -22,27 +22,19 @@ export default function Keranjang() {
       })
       .then(response => {
         const { data } = response
-        const dataOrganized = data.reduce((acc, keranjang) => {
-          if (!acc[keranjang.produk.id_usaha]) {
-            acc[keranjang.produk.id_usaha] = [keranjang]
-          } else {
-            acc[keranjang.produk.id_usaha].push(keranjang)
-          }
-          return acc
-        }, {})
-        setOrganizedData(dataOrganized)
-        setKeys(Object.keys(dataOrganized))
-        setKumpulanKeranjang(response.data)
-        
-        // let keys = Object.keys(dataOrganized)
-        // console.log(keys)
-        // keys.forEach(key => {
-        //   console.log(dataOrganized[key])
-        // })
-        // for (let key in keys) {
-        //   console.log(dataOrganized[key])
-        // }
-        
+        setKumpulanKeranjang(data)
+        if (kumpulanKeranjang.length !== 0) {
+          const dataOrganized = data.reduce((acc, keranjang) => {
+            if (!acc[keranjang.produk.id_usaha]) {
+              acc[keranjang.produk.id_usaha] = [keranjang]
+            } else {
+              acc[keranjang.produk.id_usaha].push(keranjang)
+            }
+            return acc
+          }, {})
+          setOrganizedData(dataOrganized)
+          setKeys(Object.keys(dataOrganized))
+        }
       })
   }
 
@@ -72,7 +64,7 @@ export default function Keranjang() {
 
   return (
     <Container>
-      {kumpulanKeranjang.length ? (
+      {kumpulanKeranjang.length !== 0 ? (
         <React.Fragment>
           {
             keys.map(key => (

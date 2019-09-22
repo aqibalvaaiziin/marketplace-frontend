@@ -17,7 +17,9 @@ function DetailProduk(props) {
   const context = useContext(UserContext)
   const [produk] = useState(props.location.state)
   const [usaha, setUsaha] = useState({})
-  const [jumlah, setJumlah] = useState(1)
+  const [jumlah, setJumlah] = useState(
+    (context.getPengguna().usaha.id_usaha == produk.id_usaha) ? produk.stok : 1
+  )
 
   useEffect(() => {
     axios.get(`http://localhost:8000/usaha/${produk.id_usaha}`)
@@ -35,6 +37,28 @@ function DetailProduk(props) {
         { headers: { Authorization: `Bearer ${context.token}` } },
       )
       .then(() => props.history.push('/keranjang'))
+  }
+
+  
+  function updateStok() {
+    axios
+      .put(
+        `http://localhost:8000/usaha/${produk.id_usaha}/produk/${produk.id_produk}`,
+        {
+          stok: parseInt(jumlah)
+        },
+        { headers: { Authorization: `Bearer ${context.token}` } }
+      )
+      .then(() => setJumlah(jumlah))
+  }
+
+  function deleteProduk() {
+    axios
+      .delete(
+        `http://localhost:8000/usaha/${produk.id_usaha}/produk/${produk.id_produk}`,
+        { headers: { Authorization: `Bearer ${context.token}` } }
+      )
+      .then(() => props.history.push('/usaha'))
   }
 
   return (
@@ -79,20 +103,39 @@ function DetailProduk(props) {
           <Form>
             <Form.Field>
               <label>Jumlah</label>
-              <Input
-                type="number"
-                placeholder="Jumlah"
-                value={jumlah}
-                onChange={(event, { value }) => setJumlah(value)}
-                min="1"
-                action={{
-                  color: 'blue',
-                  labelPosition: 'right',
-                  icon: 'cart',
-                  content: 'Beli',
-                  onClick: addKeranjang,
-                }}
-              />
+              {
+                context.getPengguna().usaha.id_usaha != produk.id_usaha ? (
+                  <Input
+                    type="number"
+                    placeholder="Jumlah"
+                    value={jumlah}
+                    onChange={(event, { value }) => setJumlah(value)}
+                    min="1"
+                    action={{
+                      color: 'blue',
+                      labelPosition: 'right',
+                      icon: 'cart',
+                      content: 'Beli',
+                      onClick: addKeranjang,
+                    }}
+                  />
+                ) : (
+                  <Input
+                    type="number"
+                    placeholder="Jumlah"
+                    value={jumlah}
+                    onChange={(event, { value }) => setJumlah(value)}
+                    min="1"
+                    action={{
+                      color: 'yellow',
+                      labelPosition: 'right',
+                      icon: 'sync',
+                      content: 'Update Stok',
+                      onClick: updateStok,
+                    }}
+                  />
+                )
+              }
             </Form.Field>
           </Form>
         </Grid.Column>
@@ -101,23 +144,39 @@ function DetailProduk(props) {
         <Grid.Column />
         <Grid.Column>
           <Grid columns={2} celled="internally" verticalAlign="middle">
-            <Grid.Column>
-              {
-                usaha && (
-                  <Header
-                    size="tiny"
-                    icon="warehouse"
-                    content={usaha.nama}
-                    floated="right"
-                  />
-                )
-              }
-                </Grid.Column>
-                <Grid.Column>
-                <Link to={{ pathname: '/usaha', state: produk.usaha }}>
-                  <Button color="instagram" size="medium" floated='left'>Kunjungi Toko</Button>
-                </Link>
-              </Grid.Column>
+            {
+              context.getPengguna().usaha.id_usaha != produk.id_usaha ? (
+                <React.Fragment>
+                  <Grid.Column>
+                  {
+                    usaha && (
+                      <Header
+                        size="tiny"
+                        icon="warehouse"
+                        content={usaha.nama}
+                        floated="right"
+                      />
+                    )
+                  }
+                    </Grid.Column>
+                    <Grid.Column>
+                    <Link to={{ pathname: '/usaha', state: produk.usaha }}>
+                      <Button color="instagram" size="medium" floated='left'>Kunjungi Toko</Button>
+                    </Link>
+                  </Grid.Column>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <Grid.Column>
+                    <Button disabled color="yellow" size="medium" floated='right'>Update Produk</Button>
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Button color="red" size="medium" floated='left' onClick={deleteProduk}>Delete Produk</Button>
+                  </Grid.Column>
+                </React.Fragment>
+              )
+            }
+            
           </Grid>
         </Grid.Column>
       </Grid>
