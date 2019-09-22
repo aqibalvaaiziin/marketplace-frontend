@@ -18,8 +18,9 @@ export default function Ongkir(props) {
   const [kumpulanKota, setKumpulanKota] = useState([])
   const [idKota, setIdKota] = useState()
   const [idProvinsi, setIdProvinsi] = useState()
-  const [detailAlamat, setDetailAlamat] = useState()
+  const [detailAlamat, setDetailAlamat] = useState("")
   const [ongkos, setOngkos] = useState()
+  const [kotaTujuan, setKotaTujuan] = useState("")
   const [error, setError] = useState(false)
 
   const optionProvinsi = kumpulanProvinsi.map(provinsi => ({
@@ -51,20 +52,22 @@ export default function Ongkir(props) {
   function getKota(e, { value }) {
     setIdProvinsi(value)
     axios
-      .get(`http://marketplace-backend-app.herokuapp.com/provinsi/${value}/kota`)
+      .get(`http://localhost:8000/provinsi/${value}/kota`)
       .then(response => {
         setKumpulanKota(response.data)
       })
   }
 
   function getSelectedKota(e, { value }) {
+    const kota = kumpulanKota.find((town) => town.id_kota == value)
+    setKotaTujuan(`${kota.tipe} ${kota.kota}`)
     setIdKota(value)
   }
 
   function hitungOngkir() {
     axios
       .post('http://localhost:8000/ongkir', {
-        kota_asal: 256,
+        kota_asal: props.location.state.kotaAsal,
         kota_tujuan: idKota,
         berat: props.location.state.totalBerat,
       })
@@ -79,15 +82,18 @@ export default function Ongkir(props) {
       })
   }
 
-  function bayar() {
+  function bayar(id) {
     axios
       .post(
         'http://localhost:8000/transaksi',
         {
+          id_usaha: id,
           ongkir: ongkos,
-          kota_asal: 256,
+          kota_asal: props.location.state.kotaAsal,
           kota_tujuan: idKota,
           detail_alamat: detailAlamat,
+          nama_kota_asal: props.location.state.namaKotaAsal,
+          nama_kota_tujuan: kotaTujuan
         },
         { headers: { Authorization: `Bearer ${context.token}` } },
       )
@@ -156,7 +162,7 @@ export default function Ongkir(props) {
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
-                  <Button primary onClick={bayar}>
+                  <Button primary onClick={bayar.bind(this, props.location.state.idUsaha)}>
                     Bayar
                   </Button>
                 </Grid.Column>

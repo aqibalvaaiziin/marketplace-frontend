@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import ProductCard from './ProductCard'
+import Sidebar from "../../component/Sidebar";
+import { UserContext } from '../../App'
 import axios from 'axios'
 
 function Home() {
+  const context = useContext(UserContext)
   const [kumpulanProduk, setKumpulanProduk] = useState([])
 
   useEffect(() => {
@@ -14,18 +17,42 @@ function Home() {
   }, [])
 
   return (
-    <Container>
-      <Grid columns={5}>
-        <Grid.Row>
-          {kumpulanProduk.map(produk => (
-            <Grid.Column style={styles.cardRow} key={produk.id_produk}>
-              <Link to={{ pathname: '/detail-produk', state: produk }}>
-                <ProductCard name={produk.nama} price={produk.harga} />
-              </Link>
-            </Grid.Column>
-          ))}
-        </Grid.Row>
-      </Grid>
+    <Container style={styles.marginSide}>
+        {
+          context.isLoggedIn() ? (
+            <Grid columns={2}>
+              <Grid.Column width={3}>
+                <Sidebar/>
+              </Grid.Column>
+              <Grid.Column width={13}>
+              <Grid columns={5}>
+                <Grid.Row>
+                  {kumpulanProduk.map(produk => (
+                    <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                      <Link to={{ pathname: '/detail-produk', state: produk }}>
+                        <ProductCard name={produk.nama} price={produk.harga} />
+                      </Link>
+                    </Grid.Column>
+                  ))}
+                </Grid.Row>
+              </Grid>
+              </Grid.Column>
+            </Grid>
+          ) : (
+            <Grid columns={5}>
+              <Grid.Row>
+                {kumpulanProduk.map(produk => (
+                  <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                    <Link to={{ pathname: '/detail-produk', state: produk }}>
+                      <ProductCard name={produk.nama} price={produk.harga} />
+                    </Link>
+                  </Grid.Column>
+                ))}
+              </Grid.Row>
+            </Grid>
+          )
+        }
+      
     </Container>
   )
 }
@@ -36,4 +63,7 @@ const styles = {
   cardRow: {
     marginTop: 15,
   },
+  marginSide: {
+    marginTop: 25
+  }
 }

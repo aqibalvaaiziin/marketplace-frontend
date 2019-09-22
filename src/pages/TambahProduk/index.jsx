@@ -80,7 +80,7 @@ function TambahProduk(props) {
                             </Form.Group>
                             <Form.TextArea
                                 label="Deskripsi Produk"
-                                placeholder="Tes"
+                                placeholder="Deskripsi produk anda..."
                             />         
                             <Form.Input
                                 label="Gambar Produk"

@@ -15,6 +15,7 @@ import Masuk from './pages/Masuk/'
 import DaftarUsaha from './pages/DaftarUsaha'
 import Usaha from './pages/Usaha'
 import TambahProduk from './pages/TambahProduk'
+import DaftarAnggota from './pages/DaftarAnggota'
 
 const routes = [
   {
@@ -98,12 +99,21 @@ const routes = [
     name: 'usaha',
     label: 'Usaha',
     private: true,
+    hide: true
   },
   {
     path: '/tambahproduk',
     component: TambahProduk,
     name: 'tambahproduk',
     label: 'TambahProduk',
+    hide: true,
+    private: true,
+  },
+  {
+    path: '/daftaranggota',
+    component: DaftarAnggota,
+    name: 'daftaranggota',
+    label: 'DaftarAnggota',
     hide: true,
     private: true,
   }

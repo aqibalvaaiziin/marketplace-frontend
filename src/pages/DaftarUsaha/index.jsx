@@ -10,12 +10,29 @@ import {
     Header,
     Icon,
 } from 'semantic-ui-react'
+import { UserContext } from '../../App'
 
 function DaftarUsaha(props) {
     const [kumpulanProvinsi, setKumpulanProvinsi] = useState([])
     const [kumpulanKota, setKumpulanKota] = useState([])
     const [idKota, setIdKota] = useState()
     const [idProvinsi, setIdProvinsi] = useState()
+    const [selectedFile, setSelectedFile] = useState(null)
+    const [input, setInput] = useState({
+        nama:"",
+        kota: 0,
+        nama_kota: "",
+        nama_provinsi: "",
+        detail_alamat: "",
+        slogan: "",
+        no_telp: "",
+    })
+
+    const context = useContext(UserContext)
+
+    function changeValue(value, name) {
+        setInput({ ...input, [name]: value })
+    }
 
     const optionProvinsi = kumpulanProvinsi.map(provinsi => ({
         key: provinsi.id_provinsi,
@@ -42,15 +59,35 @@ function DaftarUsaha(props) {
     function getKota(e, { value }) {
         setIdProvinsi(value)
         axios
-            .get(`http://marketplace-express.herokuapp.com/provinsi/${value}/kota`)
+            .get(`http://localhost:8000/provinsi/${value}/kota`)
             .then(response => {
                 setKumpulanKota(response.data)
             })
     }
 
     function getSelectedKota(e, { value }) {
+        const kota = kumpulanKota.find((town) => town.id_kota == value)
+        setInput({...input, kota: value, nama_kota: `${kota.tipe} ${kota.kota}`, nama_provinsi: kota.provinsi})
         setIdKota(value)
     }
+
+    function daftarUsaha() {
+        axios.post(`http://localhost:8000/pengguna/anggota/bukausaha`, 
+            input,
+            {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${context.token}`,
+                },
+            },
+            )
+            .then(res => {
+                localStorage.setItem('token', res.data.token)
+                context.setToken(res.data.token)
+                props.history.push('/usaha')
+            })
+    }
+
     return (
         <Container style={{ marginBottom: "35px", marginTop: "30px" }}>
             <Header as="h1" icon textAlign="center">
@@ -64,17 +101,23 @@ function DaftarUsaha(props) {
                             <Form.Group widths="equal">
                                 <Form.Input
                                     fluid
-                                    id="tes"
                                     label="Nama"
-                                    placeholder="Tes"
+                                    placeholder="Nama usaha anda..."
+                                    onChange={event => changeValue(event.target.value, 'nama')}
                                 />
                                 <Form.Input
                                     fluid
-                                    id="tes2"
                                     label="No Telp."
-                                    placeholder="Tes2"
+                                    placeholder="Nomor telepon"
+                                    onChange={event => changeValue(event.target.value, 'no_telp')}
                                 />
                             </Form.Group>
+                            <Form.Input
+                                fluid
+                                label="Slogan"
+                                placeholder="Slogan usaha anda..."
+                                onChange={event => changeValue(event.target.value, 'slogan')}
+                            />
                             <Header as="h4">Alamat</Header>
                             <Segment >
                                 <Grid textAlign="center">
@@ -89,7 +132,6 @@ function DaftarUsaha(props) {
                                                 fluid
                                                 search
                                                 selection
-
                                                 options={optionProvinsi}
                                                 onChange={getKota}
                                                 value={idProvinsi}
@@ -112,15 +154,20 @@ function DaftarUsaha(props) {
                             <Form.TextArea
                                 label="Detail Alamat"
                                 placeholder="Detail Alamat"
+                                onChange={event => changeValue(event.target.value, 'detail_alamat')}
                             />
                             <Form.Input
+                                id="logo-usaha"
                                 label="Logo Usaha"
-                                type="file">
+                                type="file"
+                                onChange={e => setSelectedFile(e.target.files[0])}
+                                >
 
                             </Form.Input>
                             <Form.Button
                                 color="green"
-                                size="big">
+                                size="big"
+                                onClick={daftarUsaha}>
                                 Daftar
                             </Form.Button>
                         </Form>

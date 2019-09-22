@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../App'
-import { Container, Table, Button, Header } from 'semantic-ui-react'
+import { Container, Table, Button, Header, Divider } from 'semantic-ui-react'
 import axios from 'axios'
 import InputJumlah from './InputJumlah'
 import { Link } from 'react-router-dom'
@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom'
 export default function Keranjang() {
   const context = useContext(UserContext)
   const [kumpulanKeranjang, setKumpulanKeranjang] = useState([])
+  const [organizedData, setOrganizedData] = useState({})
+  const [keys, setKeys] = useState([])
 
   useEffect(() => {
     getKeranjang()
@@ -18,7 +20,30 @@ export default function Keranjang() {
       .get('http://localhost:8000/keranjang', {
         headers: { Authorization: `Bearer ${context.token}` },
       })
-      .then(response => setKumpulanKeranjang(response.data))
+      .then(response => {
+        const { data } = response
+        const dataOrganized = data.reduce((acc, keranjang) => {
+          if (!acc[keranjang.produk.id_usaha]) {
+            acc[keranjang.produk.id_usaha] = [keranjang]
+          } else {
+            acc[keranjang.produk.id_usaha].push(keranjang)
+          }
+          return acc
+        }, {})
+        setOrganizedData(dataOrganized)
+        setKeys(Object.keys(dataOrganized))
+        setKumpulanKeranjang(response.data)
+        
+        // let keys = Object.keys(dataOrganized)
+        // console.log(keys)
+        // keys.forEach(key => {
+        //   console.log(dataOrganized[key])
+        // })
+        // for (let key in keys) {
+        //   console.log(dataOrganized[key])
+        // }
+        
+      })
   }
 
   function changeJumlah(id_keranjang, jumlah) {
@@ -33,14 +58,14 @@ export default function Keranjang() {
       .then(() => getKeranjang())
   }
 
-  function getTotalHarga() {
-    return kumpulanKeranjang
+  function getTotalHarga(key) {
+    return organizedData[key]
       .map(item => item.produk.harga * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
 
-  function getTotalBerat() {
-    return kumpulanKeranjang
+  function getTotalBerat(key) {
+    return organizedData[key]
       .map(item => item.produk.berat * item.jumlah)
       .reduce((prev, next) => prev + next)
   }
@@ -48,60 +73,76 @@ export default function Keranjang() {
   return (
     <Container>
       {kumpulanKeranjang.length ? (
-        <>
-          <Table celled fixed>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>No</Table.HeaderCell>
-                <Table.HeaderCell>Nama Produk</Table.HeaderCell>
-                <Table.HeaderCell>Harga</Table.HeaderCell>
-                <Table.HeaderCell>Jumlah</Table.HeaderCell>
-                <Table.HeaderCell>Sub Total</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+        <React.Fragment>
+          {
+            keys.map(key => (
+              <React.Fragment key={key}>
+                <Link to={{
+                  pathname: '/usaha',
+                  state: organizedData[key][0].produk.usaha
+                }}>
+                  <Header as="h3">{organizedData[key][0].produk.usaha.nama}</Header>
+                </Link>
+                <Table celled fixed>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>No</Table.HeaderCell>
+                      <Table.HeaderCell>Nama Produk</Table.HeaderCell>
+                      <Table.HeaderCell>Harga</Table.HeaderCell>
+                      <Table.HeaderCell>Jumlah</Table.HeaderCell>
+                      <Table.HeaderCell>Sub Total</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
 
-            <Table.Body>
-              {kumpulanKeranjang.map((keranjang, index) => (
-                <Table.Row key={keranjang.id_keranjang}>
-                  <Table.Cell>{index + 1}</Table.Cell>
-                  <Table.Cell>{keranjang.produk.nama}</Table.Cell>
-                  <Table.Cell>{keranjang.produk.harga}</Table.Cell>
-                  <Table.Cell>
-                    <InputJumlah
-                      initialValue={keranjang.jumlah}
-                      onSubmit={value =>
-                        changeJumlah(keranjang.id_keranjang, value)
-                      }
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    {keranjang.produk.harga * keranjang.jumlah}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
+                  <Table.Body>
+                    {organizedData[key].map((keranjang, index) => (
+                      <Table.Row key={keranjang.id_keranjang}>
+                        <Table.Cell>{index + 1}</Table.Cell>
+                        <Table.Cell>{keranjang.produk.nama}</Table.Cell>
+                        <Table.Cell>{keranjang.produk.harga}</Table.Cell>
+                        <Table.Cell>
+                          <InputJumlah
+                            initialValue={keranjang.jumlah}
+                            onSubmit={value =>
+                              changeJumlah(keranjang.id_keranjang, value)
+                            }
+                          />
+                        </Table.Cell>
+                        <Table.Cell>
+                          {keranjang.produk.harga * keranjang.jumlah}
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
 
-            <Table.Footer>
-              <Table.Row>
-                <Table.HeaderCell textAlign="right" colSpan="4">
-                  Total
-                </Table.HeaderCell>
-                <Table.HeaderCell>{getTotalHarga()}</Table.HeaderCell>
-              </Table.Row>
-            </Table.Footer>
-          </Table>
-
-          <Link
-            to={{
-              pathname: '/ongkir',
-              state: {
-                totalBerat: getTotalBerat(),
-                totalHarga: getTotalHarga(),
-              },
-            }}>
-            <Button primary>Lanjutkan</Button>
-          </Link>
-        </>
+                  <Table.Footer>
+                    <Table.Row>
+                      <Table.HeaderCell textAlign="right" colSpan="4">
+                        Total
+                      </Table.HeaderCell>
+                      <Table.HeaderCell>{getTotalHarga(key)}</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Footer>
+                </Table>
+                <Link
+                  to={{
+                    pathname: '/ongkir',
+                    state: {
+                      kotaAsal: organizedData[key][0].produk.usaha.kota,
+                      namaKotaAsal: organizedData[key][0].produk.usaha.nama_kota,
+                      totalBerat: getTotalBerat(key),
+                      totalHarga: getTotalHarga(key),
+                      idUsaha: key
+                    },
+                  }}
+                  >
+                  <Button primary style={{marginBottom: "30px"}}>Lanjutkan</Button>
+                </Link>
+                <Divider/>
+              </React.Fragment>
+            )
+            )}
+        </React.Fragment>
       ) : (
         <Header>Keranjang Kosong</Header>
       )}

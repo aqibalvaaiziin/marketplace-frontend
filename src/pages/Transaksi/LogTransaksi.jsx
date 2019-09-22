@@ -31,8 +31,8 @@ function LogTransaksi(props) {
             <Container style={styles.marginCard} key={transaksi.id_transaksi}>
               <CardLogTransaksi
                 idTransaksi={transaksi.id_transaksi}
-                kotaAsal={transaksi.kota_asal}
-                tujuan={transaksi.kota_tujuan}
+                kotaAsal={transaksi.nama_kota_asal}
+                tujuan={transaksi.nama_kota_tujuan}
                 detailAlamat={transaksi.detail_alamat}
                 tanggal={`${date}-${month}-${year} ${hour}:${minutes}`}
                 totalBerat={transaksi.total_berat}
