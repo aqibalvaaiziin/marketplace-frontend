@@ -17,16 +17,17 @@ function DetailProduk(props) {
   const context = useContext(UserContext)
   const [produk, setProduk] = useState(props.location.state)
   const [usaha, setUsaha] = useState({})
-  const [jumlah, setJumlah] = useState(
-    (context.getPengguna().usaha.id_usaha == produk.id_usaha) ? produk.stok : 1
-  )
+  const [jumlah, setJumlah] = useState(1)
+
 
   useEffect(() => {
     axios.get(`http://localhost:8000/usaha/${produk.id_usaha}/produk/${produk.id_produk}`)
     .then(res => {
       setUsaha(res.data.usaha)
       setProduk(res.data)
-      setJumlah(res.data.stok)
+      if (doesHaveSameUsahaId()) {
+        setJumlah(produk.stok)
+      }
     })
   }, [])
 
@@ -54,7 +55,6 @@ function DetailProduk(props) {
         { headers: { Authorization: `Bearer ${context.token}` } }
       )
       .then((res) => {
-        setJumlah((context.getPengguna().usaha.id_usaha == produk.id_usaha) ? produk.stok : 1)
         setProduk(res.data)
       })
   }
@@ -66,6 +66,24 @@ function DetailProduk(props) {
         { headers: { Authorization: `Bearer ${context.token}` } }
       )
       .then(() => props.history.push('/usaha'))
+  }
+
+  function isLoggedIn() {
+    return context.isLoggedIn()
+  }
+
+  function doesHaveUsaha() {
+    return isLoggedIn() && context.getPengguna().usaha
+  }
+
+  function doesHaveSameUsahaId() {
+    if (doesHaveUsaha()) {
+      const produkUsaha = produk.id_usaha
+      const userUsaha = context.getPengguna().usaha.id_usaha
+      return doesHaveUsaha() && produkUsaha == userUsaha
+    } else {
+      return false
+    }
   }
 
   return (
@@ -111,7 +129,7 @@ function DetailProduk(props) {
             <Form.Field>
               <label>Jumlah</label>
               {
-                context.getPengguna().usaha.id_usaha != produk.id_usaha ? (
+                !doesHaveSameUsahaId() ? (
                   <Input
                     type="number"
                     placeholder="Jumlah"
@@ -152,7 +170,7 @@ function DetailProduk(props) {
         <Grid.Column>
           <Grid columns={2} celled="internally" verticalAlign="middle">
             {
-              context.getPengguna().usaha.id_usaha != produk.id_usaha ? (
+              !doesHaveSameUsahaId() ? (
                 <React.Fragment>
                   <Grid.Column>
                   {
