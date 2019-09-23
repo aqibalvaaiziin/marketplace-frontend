@@ -15,15 +15,19 @@ import axios from 'axios'
 
 function DetailProduk(props) {
   const context = useContext(UserContext)
-  const [produk] = useState(props.location.state)
+  const [produk, setProduk] = useState(props.location.state)
   const [usaha, setUsaha] = useState({})
   const [jumlah, setJumlah] = useState(
     (context.getPengguna().usaha.id_usaha == produk.id_usaha) ? produk.stok : 1
   )
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/usaha/${produk.id_usaha}`)
-    .then(res => setUsaha(res.data))
+    axios.get(`http://localhost:8000/usaha/${produk.id_usaha}/produk/${produk.id_produk}`)
+    .then(res => {
+      setUsaha(res.data.usaha)
+      setProduk(res.data)
+      setJumlah(res.data.stok)
+    })
   }, [])
 
   function addKeranjang() {
@@ -49,7 +53,10 @@ function DetailProduk(props) {
         },
         { headers: { Authorization: `Bearer ${context.token}` } }
       )
-      .then(() => setJumlah(jumlah))
+      .then((res) => {
+        setJumlah((context.getPengguna().usaha.id_usaha == produk.id_usaha) ? produk.stok : 1)
+        setProduk(res.data)
+      })
   }
 
   function deleteProduk() {

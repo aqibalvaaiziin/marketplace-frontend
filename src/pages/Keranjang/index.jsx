@@ -23,18 +23,16 @@ export default function Keranjang() {
       .then(response => {
         const { data } = response
         setKumpulanKeranjang(data)
-        if (kumpulanKeranjang.length !== 0) {
-          const dataOrganized = data.reduce((acc, keranjang) => {
-            if (!acc[keranjang.produk.id_usaha]) {
-              acc[keranjang.produk.id_usaha] = [keranjang]
-            } else {
-              acc[keranjang.produk.id_usaha].push(keranjang)
-            }
-            return acc
-          }, {})
-          setOrganizedData(dataOrganized)
-          setKeys(Object.keys(dataOrganized))
-        }
+        const dataOrganized = data.reduce((acc, keranjang) => {
+          if (!acc[keranjang.produk.id_usaha]) {
+            acc[keranjang.produk.id_usaha] = [keranjang]
+          } else {
+            acc[keranjang.produk.id_usaha].push(keranjang)
+          }
+          return acc
+        }, {})
+        setOrganizedData(dataOrganized)
+        setKeys(Object.keys(dataOrganized))
       })
   }
 

@@ -7,7 +7,7 @@ function Sidebar() {
     const context = useContext(UserContext)
 
     return (
-        <Segment.Group>
+        <Segment.Group style={{marginTop: "15px"}}>
             <Segment>
                 <Grid columns={2}>
                     <Grid.Row verticalAlign="middle">
