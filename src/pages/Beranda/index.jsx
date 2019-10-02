@@ -9,22 +9,46 @@ import axios from 'axios'
 function Home() {
   const context = useContext(UserContext)
   const [kumpulanProduk, setKumpulanProduk] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     axios
       .get('http://localhost:8000/produk')
-      .then(res => setKumpulanProduk(res.data))
+      .then(res => {
+        setKumpulanProduk(res.data)
+        setLoading(false)
+      })
   }, [])
 
   return (
     <Container style={styles.marginSide}>
-        {
-          context.isLoggedIn() ? (
-            <Grid columns={2}>
-              <Grid.Column width={3}>
-                <Sidebar/>
-              </Grid.Column>
-              <Grid.Column width={13}>
+      {
+        context.isLoggedIn() ? [
+          <Grid columns={2}>
+            <Grid.Column width={3}>
+              <Sidebar />
+            </Grid.Column>
+            {
+              (loading) ? ("loading") : (
+                <Grid.Column width={13}>
+                  <Grid columns={5}>
+                    <Grid.Row>
+                      {kumpulanProduk.map(produk => (
+                        <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                          <Link to={{ pathname: '/detail-produk', state: produk }}>
+                            <ProductCard name={produk.nama} price={produk.harga} />
+                          </Link>
+                        </Grid.Column>
+                      ))}
+                    </Grid.Row>
+                  </Grid>
+                </Grid.Column>
+              )
+            }
+          </Grid>
+        ] : [
+            (loading) ? ("loading") : (
               <Grid columns={5}>
                 <Grid.Row>
                   {kumpulanProduk.map(produk => (
@@ -36,23 +60,10 @@ function Home() {
                   ))}
                 </Grid.Row>
               </Grid>
-              </Grid.Column>
-            </Grid>
-          ) : (
-            <Grid columns={5}>
-              <Grid.Row>
-                {kumpulanProduk.map(produk => (
-                  <Grid.Column style={styles.cardRow} key={produk.id_produk}>
-                    <Link to={{ pathname: '/detail-produk', state: produk }}>
-                      <ProductCard name={produk.nama} price={produk.harga} />
-                    </Link>
-                  </Grid.Column>
-                ))}
-              </Grid.Row>
-            </Grid>
-          )
-        }
-      
+            )
+          ]
+      }
+
     </Container>
   )
 }
