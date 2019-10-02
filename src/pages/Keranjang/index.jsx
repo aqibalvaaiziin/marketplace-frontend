@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { UserContext } from '../../App'
-import { Container, Table, Button, Header, Divider } from 'semantic-ui-react'
+import { Container, Table, Button, Header, Divider, Checkbox } from 'semantic-ui-react'
 import axios from 'axios'
 import InputJumlah from './InputJumlah'
 import { Link } from 'react-router-dom'
@@ -24,6 +24,7 @@ export default function Keranjang() {
         const { data } = response
         setKumpulanKeranjang(data)
         const dataOrganized = data.reduce((acc, keranjang) => {
+          keranjang.checked = false
           if (!acc[keranjang.produk.id_usaha]) {
             acc[keranjang.produk.id_usaha] = [keranjang]
           } else {
@@ -32,6 +33,7 @@ export default function Keranjang() {
           return acc
         }, {})
         setOrganizedData(dataOrganized)
+        console.log(dataOrganized)
         setKeys(Object.keys(dataOrganized))
       })
   }
@@ -76,6 +78,7 @@ export default function Keranjang() {
                 <Table celled fixed>
                   <Table.Header>
                     <Table.Row>
+                      <Table.HeaderCell>Checklist</Table.HeaderCell>
                       <Table.HeaderCell>No</Table.HeaderCell>
                       <Table.HeaderCell>Nama Produk</Table.HeaderCell>
                       <Table.HeaderCell>Harga</Table.HeaderCell>
@@ -87,6 +90,11 @@ export default function Keranjang() {
                   <Table.Body>
                     {organizedData[key].map((keranjang, index) => (
                       <Table.Row key={keranjang.id_keranjang}>
+                        <Table.Cell>
+                          <Checkbox
+                            checked={keranjang.checked}
+                          />
+                        </Table.Cell>
                         <Table.Cell>{index + 1}</Table.Cell>
                         <Table.Cell>{keranjang.produk.nama}</Table.Cell>
                         <Table.Cell>{keranjang.produk.harga}</Table.Cell>
@@ -125,17 +133,17 @@ export default function Keranjang() {
                       idUsaha: key
                     },
                   }}
-                  >
-                  <Button primary style={{marginBottom: "30px"}}>Lanjutkan</Button>
+                >
+                  <Button primary style={{ marginBottom: "30px" }}>Lanjutkan</Button>
                 </Link>
-                <Divider/>
+                <Divider />
               </React.Fragment>
             )
             )}
         </React.Fragment>
       ) : (
-        <Header>Keranjang Kosong</Header>
-      )}
+          <Header>Keranjang Kosong</Header>
+        )}
     </Container>
   )
 }
