@@ -8,12 +8,6 @@ import Keranjang from '../../pages/Keranjang'
 
 const routes = [
   {
-    path: '/keranjang',
-    component: Keranjang,
-    name: 'keranjang',
-    label: 'Keranjang',
-  },
-  {
     path: '/transaksi',
     component: LogTransaksi,
     name: 'logTransaksi',

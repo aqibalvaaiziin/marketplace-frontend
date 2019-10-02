@@ -1,19 +1,20 @@
 import React, { useContext } from 'react'
 import { UserContext } from "../../App";
-import { Segment, Grid, Image, Header, Divider } from 'semantic-ui-react';
+import { Segment, Grid, Image, Header, Divider, Button } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
+import { styles } from 'ansi-colors';
 
 function Sidebar() {
     const context = useContext(UserContext)
 
     return (
-        <Segment.Group style={{marginTop: "15px"}}>
+        <Segment.Group style={{ marginTop: "15px" }}>
             <Segment>
                 <Grid columns={2}>
                     <Grid.Row verticalAlign="middle">
                         <Grid.Column width={5}>
                             <Image
-                                src="https://placeimg.com/120/120/any" 
+                                src="https://placeimg.com/120/120/any"
                                 fluid
                             />
                         </Grid.Column>
@@ -42,12 +43,12 @@ function Sidebar() {
                                 <Grid.Row verticalAlign="middle">
                                     <Grid.Column width={5}>
                                         <Image
-                                            src="https://placeimg.com/120/120/any" 
+                                            src="https://placeimg.com/120/120/any"
                                             fluid
                                         />
                                     </Grid.Column>
                                     <Grid.Column width={11}>
-                                        <Link to={{pathname: `/usaha`}}>
+                                        <Link to={{ pathname: `/usaha` }}>
                                             <Header as="h4">
                                                 {context.getPengguna().usaha.nama}
                                             </Header>
@@ -55,37 +56,33 @@ function Sidebar() {
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>
-                            <Divider/>
-                            <Link to={{pathname: `/tambahproduk`}}>
-                                    Tambah Produk
+                            <Divider />
+                            <Link to={{ pathname: `/tambahproduk` }}>
+                                <Button content="Tambah Produk" color="green" fluid />
                             </Link>
                         </React.Fragment>
                     ) : (
-                        <React.Fragment>
-                            {
-                                context.getPengguna().keanggotaan ? (
-                                    <React.Fragment>
-                                        <Link to={{pathname: "/daftarusaha"}}>
-                                            <Header as="h4">
-                                                Mulai jualan?
-                                            </Header>
-                                        </Link>
-                                    </React.Fragment>
-                                ) : (
-                                    <React.Fragment>
-                                        <Link to={{pathname: "/daftaranggota"}}>
-                                            <Header as="h4">
-                                                Daftar Jadi Anggota?
-                                            </Header>
-                                        </Link>
-                                    </React.Fragment>
-                                )
-                            }
-                        </React.Fragment>
-                    )
+                            <React.Fragment>
+                                {
+                                    context.getPengguna().keanggotaan ? (
+                                        <React.Fragment>
+                                            <Link to={{ pathname: "/daftarusaha" }}>
+                                                <Button content="Buka Usaha" color="green" fluid />
+                                            </Link>
+                                        </React.Fragment>
+                                    ) : (
+                                            <React.Fragment>
+                                                <Link to={{ pathname: "/daftaranggota" }}>
+                                                    <Button content="Daftar Anggota" color="green" fluid />
+                                                </Link>
+                                            </React.Fragment>
+                                        )
+                                }
+                            </React.Fragment>
+                        )
                 }
             </Segment>
-        </Segment.Group>    
+        </Segment.Group>
     )
 }
 
