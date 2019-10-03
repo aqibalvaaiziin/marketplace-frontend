@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Menu, Button } from 'semantic-ui-react'
+import { Menu, Input, Icon, Header, Button } from 'semantic-ui-react'
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import Beranda from './pages/Beranda'
 import DetailProduk from './pages/DetailProduk'
@@ -159,13 +159,13 @@ function App() {
           key={route.name}
         />
       ) : (
-        <Route
-          path={route.path}
-          exact
-          component={route.component}
-          key={route.name}
-        />
-      ),
+          <Route
+            path={route.path}
+            exact
+            component={route.component}
+            key={route.name}
+          />
+        ),
     )
   }
 
@@ -198,20 +198,42 @@ function App() {
   return (
     <UserContext.Provider value={providerValue}>
       <BrowserRouter>
-        <Menu secondary pointing>
-          <Link to="/" onClick={() => setActiveRoute('/')}>
-            <Menu.Item header>Marketplace Koperasi</Menu.Item>
-          </Link>
-          {renderMenuItems()}
+        <Menu secondary pointing size="small">
+          <Menu.Item>
+            <Link to="/" onClick={() => setActiveRoute('/')}>
+              <Menu.Item><Header size='medium'>Marketplace Koperasi</Header></Menu.Item>
+            </Link>
+          </Menu.Item>
+          <Menu.Item>
+            {renderMenuItems()}
+          </Menu.Item>
           <Menu.Menu position="right">
             <Menu.Item>
               {isLoggedIn() ? (
-                <UserDropdown />
+                <>
+                  <Menu.Item>
+                    <Input size="large" icon="search" placeholder="Search..." />
+                  </Menu.Item>
+                  <Link to="/keranjang">
+                    <Menu.Item
+                      name="shopping cart">
+                      <Icon name="shopping cart" />
+                    </Menu.Item>
+                  </Link>
+                  <Link to="/usaha">
+                    <Menu.Item>
+                      Toko
+                    </Menu.Item>
+                  </Link>
+                  <Menu.Item>
+                    <UserDropdown />
+                  </Menu.Item>
+                </>
               ) : (
-                <Link to="/masuk">
-                  <Button content="Masuk" color="green" />
-                </Link>
-              )}
+                  <Link to="/masuk">
+                    <Button content="Masuk" color="green" />
+                  </Link>
+                )}
             </Menu.Item>
           </Menu.Menu>
         </Menu>
