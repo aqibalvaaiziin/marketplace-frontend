@@ -13,7 +13,13 @@ import {
 import { UserContext } from '../../App'
 
 export default function Ongkir(props) {
+  
+  if (props.location.state.totalBerat === 0 || props.location.state.totalBerat === 0) {
+    props.history.push('/keranjang')
+  }
+
   const context = useContext(UserContext)
+
   const [kumpulanProvinsi, setKumpulanProvinsi] = useState([])
   const [kumpulanKota, setKumpulanKota] = useState([])
   const [idKota, setIdKota] = useState()
@@ -88,6 +94,7 @@ export default function Ongkir(props) {
         'http://localhost:8000/transaksi',
         {
           id_usaha: id,
+          id_keranjang: props.location.state.idKeranjang,
           ongkir: ongkos,
           kota_asal: props.location.state.kotaAsal,
           kota_tujuan: idKota,
