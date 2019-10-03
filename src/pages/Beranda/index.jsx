@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Container, Grid } from 'semantic-ui-react'
+import { Container, Grid, Placeholder } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import ProductCard from './ProductCard'
 import Sidebar from "../../component/Sidebar";
@@ -30,37 +30,59 @@ function Home() {
               <Sidebar />
             </Grid.Column>
             {
-              (loading) ? ("loading") : (
-                <Grid.Column width={13}>
-                  <Grid columns={5}>
-                    <Grid.Row>
-                      {kumpulanProduk.map(produk => (
-                        <Grid.Column style={styles.cardRow} key={produk.id_produk}>
-                          <Link to={{ pathname: '/detail-produk', state: produk }}>
-                            <ProductCard name={produk.nama} price={produk.harga} />
-                          </Link>
-                        </Grid.Column>
-                      ))}
-                    </Grid.Row>
-                  </Grid>
-                </Grid.Column>
-              )
+              (loading) ? (
+                <Placeholder>
+                  <Placeholder.Header image>
+                    <Placeholder.Line />
+                    <Placeholder.Line />
+                  </Placeholder.Header>
+                  <Placeholder.Paragraph>
+                    <Placeholder.Line length='medium' />
+                    <Placeholder.Line length='short' />
+                  </Placeholder.Paragraph>
+                </Placeholder>
+              ) : (
+                  <Grid.Column width={13}>
+                    <Grid columns={5}>
+                      <Grid.Row>
+                        {kumpulanProduk.map(produk => (
+                          <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                            <Link to={{ pathname: '/detail-produk', state: produk }}>
+                              <ProductCard name={produk.nama} price={produk.harga} />
+                            </Link>
+                          </Grid.Column>
+                        ))}
+                      </Grid.Row>
+                    </Grid>
+                  </Grid.Column>
+                )
             }
           </Grid>
         ] : [
-            (loading) ? ("loading") : (
-              <Grid columns={5}>
-                <Grid.Row>
-                  {kumpulanProduk.map(produk => (
-                    <Grid.Column style={styles.cardRow} key={produk.id_produk}>
-                      <Link to={{ pathname: '/detail-produk', state: produk }}>
-                        <ProductCard name={produk.nama} price={produk.harga} />
-                      </Link>
-                    </Grid.Column>
-                  ))}
-                </Grid.Row>
-              </Grid>
-            )
+            (loading) ? (
+              <Placeholder>
+                <Placeholder.Header image>
+                  <Placeholder.Line />
+                  <Placeholder.Line />
+                </Placeholder.Header>
+                <Placeholder.Paragraph>
+                  <Placeholder.Line length='medium' />
+                  <Placeholder.Line length='short' />
+                </Placeholder.Paragraph>
+              </Placeholder>
+            ) : (
+                <Grid columns={5}>
+                  <Grid.Row>
+                    {kumpulanProduk.map(produk => (
+                      <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                        <Link to={{ pathname: '/detail-produk', state: produk }}>
+                          <ProductCard name={produk.nama} price={produk.harga} />
+                        </Link>
+                      </Grid.Column>
+                    ))}
+                  </Grid.Row>
+                </Grid>
+              )
           ]
       }
 
