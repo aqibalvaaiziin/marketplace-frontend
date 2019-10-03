@@ -175,7 +175,6 @@ function App() {
         !route.hide && (
           <Link to={route.path} key={route.name}>
             <Menu.Item
-              as="div"
               name={route.name}
               active={isActive(route)}
               onClick={(e, { name }) => setActiveRoute(name)}>
@@ -200,9 +199,11 @@ function App() {
       <BrowserRouter>
         <Menu secondary pointing size="small">
           <Menu.Item>
-            <Link to="/" onClick={() => setActiveRoute('/')}>
-              <Menu.Item><Header size='medium'>Marketplace Koperasi</Header></Menu.Item>
-            </Link>
+            <Menu.Item>
+              <Link to="/" onClick={() => setActiveRoute('/')}>
+                <Header size='medium'>Marketplace Koperasi</Header>
+              </Link>
+            </Menu.Item>
           </Menu.Item>
           <Menu.Item>
             {renderMenuItems()}
@@ -214,22 +215,24 @@ function App() {
                   <Menu.Item>
                     <Input size="large" icon="search" placeholder="Search..." />
                   </Menu.Item>
-                  <Link to="/keranjang">
                     <Menu.Item
                       name="shopping cart">
-                      <Icon name="shopping cart" />
+                      <Link to="/keranjang" style={{color:"#000"}}>
+                        <Icon name="shopping cart" />
+                      </Link>
                     </Menu.Item>
-                  </Link>
-                  <Link to="/usaha">
+                    {
+                      (getPengguna().usaha) && (
+                        <Menu.Item>
+                          <Link to="/usaha" style={{color:"#000"}}>
+                            Usaha
+                          </Link>
+                        </Menu.Item>
+                      )
+                    }
                     <Menu.Item>
-                      Toko
+                        <UserDropdown />
                     </Menu.Item>
-                  </Link>
-                  <Link>
-                    <Menu.Item>
-                      <UserDropdown />
-                    </Menu.Item>
-                  </Link>
                 </>
               ) : (
                   <Link to="/masuk">

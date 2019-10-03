@@ -28,35 +28,39 @@ function Home() {
           <Grid columns={2}>
             <Grid.Column width={3}>
               <Sidebar />
-            </Grid.Column>
-            {
-              (loading) ? (
-                <Placeholder>
-                  <Placeholder.Header image>
-                    <Placeholder.Line />
-                    <Placeholder.Line />
-                  </Placeholder.Header>
-                  <Placeholder.Paragraph>
-                    <Placeholder.Line length='medium' />
-                    <Placeholder.Line length='short' />
-                  </Placeholder.Paragraph>
-                </Placeholder>
-              ) : (
-                  <Grid.Column width={13}>
-                    <Grid columns={5}>
-                      <Grid.Row>
-                        {kumpulanProduk.map(produk => (
-                          <Grid.Column style={styles.cardRow} key={produk.id_produk}>
-                            <Link to={{ pathname: '/detail-produk', state: produk }}>
-                              <ProductCard name={produk.nama} price={produk.harga} />
-                            </Link>
+            </Grid.Column>  
+              <Grid.Column width={13}>
+                <Grid columns={5}>
+                  <Grid.Row>
+                      {
+                        (loading) ? (
+                          <Grid.Column stretched>
+                            <Placeholder>
+                                <Placeholder.Header image>
+                                  <Placeholder.Line />
+                                  <Placeholder.Line />
+                                </Placeholder.Header>
+                                <Placeholder.Paragraph>
+                                  <Placeholder.Line length='medium' />
+                                  <Placeholder.Line length='short' />
+                                </Placeholder.Paragraph>
+                            </Placeholder>   
                           </Grid.Column>
-                        ))}
-                      </Grid.Row>
-                    </Grid>
-                  </Grid.Column>
-                )
-            }
+                        ) : (
+                            <React.Fragment>
+                              {kumpulanProduk.map(produk => (
+                                <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                                  <Link to={{ pathname: '/detail-produk', state: produk }}>
+                                    <ProductCard name={produk.nama} price={produk.harga} />
+                                  </Link>
+                                </Grid.Column>
+                              ))}
+                            </React.Fragment>
+                        )
+                      }
+                    </Grid.Row>
+                </Grid>
+              </Grid.Column>
           </Grid>
         ] : [
             (loading) ? (
