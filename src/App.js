@@ -16,6 +16,7 @@ import DaftarUsaha from './pages/DaftarUsaha'
 import Usaha from './pages/Usaha'
 import TambahProduk from './pages/TambahProduk'
 import DaftarAnggota from './pages/DaftarAnggota'
+import Footer from './component/Footer'
 
 const routes = [
   {
@@ -216,6 +217,7 @@ function App() {
         </Menu>
 
         {renderRoutes()}
+        <Footer/>
       </BrowserRouter>
     </UserContext.Provider>
   )
