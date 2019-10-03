@@ -19,9 +19,15 @@ function Sidebar() {
                             />
                         </Grid.Column>
                         <Grid.Column width={11}>
-                            <Link to={{ pathname: `/profil` }}>
-                                <Header as="h4">
-                                    {context.getPengguna().nama}
+                            <Link to={{pathname: `/profil`}}>
+                                <Header as="h4" style={{marginBottom:"0"}}>
+                                    {context.getPengguna().nama} <br/>
+                                </Header>
+                                <Header as="h5" style={{marginTop:"0"}}>
+                                    {
+                                        (context.getPengguna().keanggotaan) ? "(anggota)"
+                                        : "(pengguna)"
+                                    }
                                 </Header>
                             </Link>
                         </Grid.Column>
