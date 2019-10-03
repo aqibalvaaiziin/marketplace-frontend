@@ -225,9 +225,11 @@ function App() {
                       Toko
                     </Menu.Item>
                   </Link>
-                  <Menu.Item>
-                    <UserDropdown />
-                  </Menu.Item>
+                  <Link>
+                    <Menu.Item>
+                      <UserDropdown />
+                    </Menu.Item>
+                  </Link>
                 </>
               ) : (
                   <Link to="/masuk">
