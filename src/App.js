@@ -175,10 +175,11 @@ function App() {
         !route.hide && (
           <Link to={route.path} key={route.name}>
             <Menu.Item
+              key={route.name}
               name={route.name}
               active={isActive(route)}
               onClick={(e, { name }) => setActiveRoute(name)}>
-              {route.label}
+                {route.label}
             </Menu.Item>
           </Link>
         ),
