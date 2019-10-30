@@ -105,7 +105,7 @@ function Usaha(props) {
         </Link>
       )}
       <Grid columns={5}>
-        <CardTabs/>
+        <CardTabs />
       </Grid>
     </Container>
   )
