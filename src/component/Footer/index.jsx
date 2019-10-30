@@ -11,15 +11,15 @@ function Footer() {
                      <Grid.Row>
                          <Grid.Column width={5}>
                             <List>
-                                <List.Item style={{marginBottom:"10px"}}>Tentang Marketplace</List.Item>
-                                <List.Item style={{marginBottom:"10px"}}>Syarat dan Ketentuan</List.Item>
-                                <List.Item style={{marginBottom:"10px"}}>Kebijakan Privasi</List.Item>
+                                <List.Item style={styles.marginItem}>Tentang Marketplace</List.Item>
+                                <List.Item style={styles.marginItem}>Syarat dan Ketentuan</List.Item>
+                                <List.Item style={styles.marginItem}>Kebijakan Privasi</List.Item>
                             </List>
                          </Grid.Column>
                          <Grid.Column width={8}>
                             <List>
-                                <List.Item style={{marginBottom:"10px"}}>Bantuan Marketplace</List.Item>
-                                <List.Item style={{marginBottom:"10px"}}>Kategori</List.Item>
+                                <List.Item style={styles.marginItem}>Bantuan Marketplace</List.Item>
+                                <List.Item style={styles.marginItem}>Kategori</List.Item>
                             </List>
                          </Grid.Column>
                          <Grid.Column width={3}>
@@ -37,6 +37,9 @@ function Footer() {
 const styles = {
     topFooter :{
         marginTop : '360px'
+    },
+    marginItem:{
+        marginBottom : '10px'
     }
 }
 
