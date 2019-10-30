@@ -33,13 +33,23 @@ function SidebarDashboardUsaha(props) {
             active={props.activeItem === listActiveItem.produkSaya}
             onClick={event => props.setActiveItem(listActiveItem.produkSaya)}
           />
-          <Menu.Item name="Tambah Produk" />
+          <Menu.Item
+            name="Tambah Produk"
+            active={props.activeItem === listActiveItem.tambahProduk}
+            onClick={event => props.setActiveItem(listActiveItem.tambahProduk)}
+          />
         </Menu.Menu>
       </Menu.Item>
       <Menu.Item>
         <Menu.Header>Keuangan</Menu.Header>
         <Menu.Menu>
-          <Menu.Item name="Penghasilan Saya" />
+          <Menu.Item
+            name="Penghasilan Saya"
+            active={props.activeItem === listActiveItem.penghasilanSaya}
+            onClick={event =>
+              props.setActiveItem(listActiveItem.penghasilanSaya)
+            }
+          />
           <Menu.Item name="Saldo Saya" />
         </Menu.Menu>
       </Menu.Item>

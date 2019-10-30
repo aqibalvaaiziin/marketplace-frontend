@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import ProductCard from '../Beranda/ProductCard'
 import SidebarDashboardUsaha, { listActiveItem } from './SidebarDashboardUsaha'
 import {
   Container,
@@ -15,6 +14,7 @@ import {
 import { UserContext } from '../../App'
 import axios from 'axios'
 import ProdukSaya from './ProdukSaya'
+import PenghasilanSaya from './PenghasilanSaya'
 
 function Usaha(props) {
   const context = useContext(UserContext)
@@ -115,6 +115,10 @@ function Usaha(props) {
               doesHaveSameUsahaId={doesHaveSameUsahaId}
             />
           )}
+          {activeItem === listActiveItem.tambahProduk && (
+            <Link to={{ pathname: '/tambahproduk' }} />
+          )}
+          {activeItem === listActiveItem.penghasilanSaya && <PenghasilanSaya />}
         </Grid.Column>
       </Grid>
     </Container>
