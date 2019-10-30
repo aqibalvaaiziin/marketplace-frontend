@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../Beranda/ProductCard'
+import SidebarDashboardUsaha, { listActiveItem } from './SidebarDashboardUsaha'
 import {
   Container,
   Image,
@@ -14,12 +15,15 @@ import {
 import { UserContext } from '../../App'
 import axios from 'axios'
 import CardTabs from './CardTabs'
+import ProdukSaya from './ProdukSaya'
 
 function Usaha(props) {
   const context = useContext(UserContext)
   let idUsaha
   const [usaha, setUsaha] = useState()
   const [loading, setLoading] = useState(false)
+
+  const [activeItem, setActiveItem] = useState()
 
   useEffect(() => {
     setLoading(false)
@@ -42,7 +46,7 @@ function Usaha(props) {
         })
     }
   }, [])
-
+  
   function isLoggedIn() {
     return context.isLoggedIn()
   }
@@ -106,6 +110,24 @@ function Usaha(props) {
       )}
       <Grid columns={5}>
         <CardTabs />
+      <Grid columns={2} style={styles.marginGrid}>
+        <Grid.Column width="3">
+          <SidebarDashboardUsaha
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+        </Grid.Column>
+        <Grid.Column width="11" style={styles.marginColumn}>
+          {/* {activeItem === listActiveItem.pesananSaya && <PesananSaya />} */}
+          {activeItem === listActiveItem.produkSaya && (
+            <ProdukSaya
+              location={props.location}
+              history={props.history}
+              usaha={usaha}
+              doesHaveSameUsahaId={doesHaveSameUsahaId}
+            />
+          )}
+        </Grid.Column>
       </Grid>
     </Container>
   )
@@ -124,4 +146,10 @@ const styles = {
     marginTop: '10px',
     marginBottom: '50px',
   },
+  marginColumn: {
+    marginLeft: '20px',
+  },
+  marginGrid: {
+    marginTop: '10px',
+  }
 }
