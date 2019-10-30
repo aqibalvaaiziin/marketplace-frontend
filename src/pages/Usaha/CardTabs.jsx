@@ -8,11 +8,16 @@ import {
   Icon,
   Input,
   Label,
-  Header,
+  Dropdown,
   Table,
 } from 'semantic-ui-react'
 
 function CardTabs() {
+  const options = [
+    { key: 1, text: 'Choice 1', value: 1 },
+    { key: 2, text: 'Choice 2', value: 2 },
+    { key: 3, text: 'Choice 3', value: 3 },
+  ]
   return (
     <Segment>
       <Grid columns={12}>
@@ -47,7 +52,39 @@ function CardTabs() {
             </Input>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row></Grid.Row>
+        <Grid.Row>
+          <Table celled style={styles.marginTable}>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Produk</Table.HeaderCell>
+                <Table.HeaderCell>Jumlah Harus Dibayar</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>
+                  <Menu>
+                    <Dropdown
+                      text="Jasa Kirim"
+                      options={options}
+                      fluid
+                      simple
+                      item
+                    />
+                  </Menu>
+                </Table.HeaderCell>
+                <Table.HeaderCell>Aksi</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>Cell</Table.Cell>
+                <Table.Cell>Cell</Table.Cell>
+                <Table.Cell>Cell</Table.Cell>
+                <Table.Cell>Cell</Table.Cell>
+                <Table.Cell>Cell</Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+        </Grid.Row>
       </Grid>
     </Segment>
   )
@@ -64,5 +101,9 @@ const styles = {
   },
   paddingColumn: {
     paddingLeft: 220,
+  },
+  marginTable: {
+    marginLeft: 10,
+    marginRight: 10,
   },
 }
