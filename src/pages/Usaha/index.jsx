@@ -14,6 +14,7 @@ import {
 } from 'semantic-ui-react'
 import { UserContext } from '../../App'
 import axios from 'axios'
+import CardTabs from './CardTabs'
 import ProdukSaya from './ProdukSaya'
 
 function Usaha(props) {
@@ -45,7 +46,7 @@ function Usaha(props) {
         })
     }
   }, [])
-
+  
   function isLoggedIn() {
     return context.isLoggedIn()
   }
@@ -63,6 +64,7 @@ function Usaha(props) {
       return false
     }
   }
+
   return (
     <Container style={styles.marginCard}>
       <Segment>
@@ -98,6 +100,16 @@ function Usaha(props) {
           </Grid>
         )}
       </Segment>
+      <Divider horizontal>Produk Usaha</Divider>
+      {doesHaveSameUsahaId() && (
+        <Link to={{ pathname: '/tambahproduk' }}>
+          <Button color="green" icon style={styles.marginDivider}>
+            <Icon name="plus"></Icon> Tambah Produk
+          </Button>
+        </Link>
+      )}
+      <Grid columns={5}>
+        <CardTabs />
       <Grid columns={2} style={styles.marginGrid}>
         <Grid.Column width="3">
           <SidebarDashboardUsaha
@@ -139,5 +151,5 @@ const styles = {
   },
   marginGrid: {
     marginTop: '10px',
-  },
+  }
 }
