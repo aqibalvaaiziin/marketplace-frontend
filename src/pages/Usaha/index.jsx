@@ -16,6 +16,7 @@ import { UserContext } from '../../App'
 import axios from 'axios'
 import CardTabs from './CardTabs'
 import ProdukSaya from './ProdukSaya'
+import PesananSayaUsaha from './PesananSayaUsaha'
 
 function Usaha(props) {
   const context = useContext(UserContext)
@@ -23,7 +24,10 @@ function Usaha(props) {
   const [usaha, setUsaha] = useState()
   const [loading, setLoading] = useState(false)
 
-  const [activeItem, setActiveItem] = useState()
+  const [activeItem, setActiveItem] = useState(listActiveItem.pesananSaya)
+  // const [activeItemPesanan, setActiveItemPesanan] = useState(
+  //   listActiveItemPesanan,
+  // )
 
   useEffect(() => {
     setLoading(false)
@@ -46,7 +50,7 @@ function Usaha(props) {
         })
     }
   }, [])
-  
+
   function isLoggedIn() {
     return context.isLoggedIn()
   }
@@ -100,35 +104,53 @@ function Usaha(props) {
           </Grid>
         )}
       </Segment>
-      <Divider horizontal>Produk Usaha</Divider>
-      {doesHaveSameUsahaId() && (
-        <Link to={{ pathname: '/tambahproduk' }}>
-          <Button color="green" icon style={styles.marginDivider}>
-            <Icon name="plus"></Icon> Tambah Produk
-          </Button>
-        </Link>
-      )}
-      <Grid columns={5}>
-        <CardTabs />
-      <Grid columns={2} style={styles.marginGrid}>
-        <Grid.Column width="3">
-          <SidebarDashboardUsaha
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-          />
-        </Grid.Column>
-        <Grid.Column width="11" style={styles.marginColumn}>
-          {/* {activeItem === listActiveItem.pesananSaya && <PesananSaya />} */}
-          {activeItem === listActiveItem.produkSaya && (
-            <ProdukSaya
-              location={props.location}
-              history={props.history}
-              usaha={usaha}
-              doesHaveSameUsahaId={doesHaveSameUsahaId}
-            />
+      {!doesHaveSameUsahaId() && (
+        <React.Fragment>
+          <Divider horizontal>Produk Usaha</Divider>
+          {doesHaveSameUsahaId() && (
+            <Link to={{ pathname: '/tambahproduk' }}>
+              <Button color="green" icon style={styles.marginDivider}>
+                <Icon name="plus"></Icon> Tambah Produk
+              </Button>
+            </Link>
           )}
-        </Grid.Column>
-      </Grid>
+          <Grid columns={5}>
+            {usaha && (
+              <Grid.Row>
+                {usaha.produks.map(produk => (
+                  <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                    <Link to={{ pathname: '/detail-produk', state: produk }}>
+                      <ProductCard name={produk.nama} price={produk.harga} />
+                    </Link>
+                  </Grid.Column>
+                ))}
+              </Grid.Row>
+            )}
+          </Grid>
+        </React.Fragment>
+      )}
+      {doesHaveSameUsahaId() && [
+        <Grid columns={2} style={styles.marginGrid}>
+          <Grid.Column width="3">
+            <SidebarDashboardUsaha
+              activeItem={activeItem}
+              setActiveItem={setActiveItem}
+              history={props.history}
+            />
+          </Grid.Column>
+          <Grid.Column width="13">
+            {activeItem === listActiveItem.pesananSaya && <PesananSayaUsaha />}
+            {activeItem === listActiveItem.produkSaya && (
+              <ProdukSaya
+                location={props.location}
+                history={props.history}
+                usaha={usaha}
+                doesHaveSameUsahaId={doesHaveSameUsahaId}
+              />
+            )}
+          </Grid.Column>
+        </Grid>,
+      ]}
     </Container>
   )
 }
@@ -151,5 +173,5 @@ const styles = {
   },
   marginGrid: {
     marginTop: '10px',
-  }
+  },
 }

@@ -1,18 +1,18 @@
 import _ from 'lodash'
 import React from 'react'
-import {
-  Grid,
-  Segment,
-  Menu,
-  Search,
-  Icon,
-  Input,
-  Label,
-  Dropdown,
-  Table,
-} from 'semantic-ui-react'
+import { Grid, Segment, Menu } from 'semantic-ui-react'
+import CardPesananContent from './CardPesananContent'
 
-function CardTabs() {
+export const listActiveItemPesanan = {
+  semuaPesanan: 'Semua Pesanan',
+  belumBayar: 'Belum Bayar',
+  perluDikirim: 'Perlu Dikirim',
+  selesai: 'Selesai',
+  pembatalan: 'Pembatalan',
+  pengembalian: 'Pengembalian',
+}
+
+function CardTabs(props) {
   const options = [
     { key: 1, text: 'Choice 1', value: 1 },
     { key: 2, text: 'Choice 2', value: 2 },
@@ -20,90 +20,88 @@ function CardTabs() {
   ]
   return (
     <Segment>
-      <Grid columns={12}>
+      <Grid columns={16}>
         <Grid.Row>
           <Grid.Column width="16">
             <Menu pointing secondary fluid widths={6}>
-              <Menu.Item name="Semua Pesanan" active="true" />
-              <Menu.Item name="Belum Bayar" />
-              <Menu.Item name="Perlu Dikirim" />
-              <Menu.Item name="Selesai" />
-              <Menu.Item name="Pembatalan" />
-              <Menu.Item name="Pengembalian" />
+              <Menu.Item
+                name="Semua Pesanan"
+                active={
+                  props.activeItemPesanan === listActiveItemPesanan.semuaPesanan
+                }
+                onClick={event =>
+                  props.setActiveItemPesanan(listActiveItemPesanan.semuaPesanan)
+                }
+              />
+              <Menu.Item
+                name="Belum Bayar"
+                active={
+                  props.activeItemPesanan === listActiveItemPesanan.belumBayar
+                }
+                onClick={event =>
+                  props.setActiveItemPesanan(listActiveItemPesanan.belumBayar)
+                }
+              />
+              <Menu.Item
+                name="Perlu Dikirim"
+                active={
+                  props.activeItemPesanan === listActiveItemPesanan.perluDikirim
+                }
+                onClick={event =>
+                  props.setActiveItemPesanan(listActiveItemPesanan.perluDikirim)
+                }
+              />
+              <Menu.Item
+                name="Selesai"
+                active={
+                  props.activeItemPesanan === listActiveItemPesanan.selesai
+                }
+                onClick={event =>
+                  props.setActiveItemPesanan(listActiveItemPesanan.selesai)
+                }
+              />
+              <Menu.Item
+                name="Pembatalan"
+                active={
+                  props.activeItemPesanan === listActiveItemPesanan.pembatalan
+                }
+                onClick={event =>
+                  props.setActiveItemPesanan(listActiveItemPesanan.pembatalan)
+                }
+              />
+              <Menu.Item
+                name="Pengembalian"
+                active={
+                  props.activeItemPesanan === listActiveItemPesanan.pengembalian
+                }
+                onClick={event =>
+                  props.setActiveItemPesanan(listActiveItemPesanan.pengembalian)
+                }
+              />
             </Menu>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width="4">
-            <Search size="small" placeholder="Search..." />
-          </Grid.Column>
-          <Grid.Column width="12" style={styles.paddingColumn}>
-            Waktu Pesanan Dibuat
-            <Input size="small" type="date" style={styles.marginInput}>
-              <input />
-              <Icon name="calendar alternate" size="large" />
-            </Input>
-            <Label size="small" style={styles.marginInput}>
-              s/d
-            </Label>
-            <Input size="small" type="date" style={styles.marginInput}>
-              <input />
-              <Icon name="calendar alternate" size="large" />
-            </Input>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Table celled style={styles.marginTable}>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Produk</Table.HeaderCell>
-                <Table.HeaderCell>Jumlah Harus Dibayar</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>
-                  <Menu>
-                    <Dropdown
-                      text="Jasa Kirim"
-                      options={options}
-                      fluid
-                      simple
-                      item
-                    />
-                  </Menu>
-                </Table.HeaderCell>
-                <Table.HeaderCell>Aksi</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-
-            <Table.Body>
-              <Table.Row>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-                <Table.Cell>Cell</Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
-        </Grid.Row>
+        {props.activeItemPesanan === listActiveItemPesanan.semuaPesanan && (
+          <CardPesananContent options={options} />
+        )}
+        {props.activeItemPesanan === listActiveItemPesanan.belumBayar && (
+          <CardPesananContent options={options} />
+        )}
+        {props.activeItemPesanan === listActiveItemPesanan.perluDikirim && (
+          <CardPesananContent options={options} />
+        )}
+        {props.activeItemPesanan === listActiveItemPesanan.selesai && (
+          <CardPesananContent options={options} />
+        )}
+        {props.activeItemPesanan === listActiveItemPesanan.pembatalan && (
+          <CardPesananContent options={options} />
+        )}
+        {props.activeItemPesanan === listActiveItemPesanan.pengembalian && (
+          <CardPesananContent options={options} />
+        )}
       </Grid>
     </Segment>
   )
 }
 
 export default CardTabs
-
-const styles = {
-  marginTabs: {
-    marginBottom: 15,
-  },
-  marginInput: {
-    marginLeft: 15,
-  },
-  paddingColumn: {
-    paddingLeft: 220,
-  },
-  marginTable: {
-    marginLeft: 10,
-    marginRight: 10,
-  },
-}
