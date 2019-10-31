@@ -74,6 +74,7 @@ function Profil(props) {
                   setActiveItem={setActiveItem}
                   activeItem={activeItem}
                   listActiveItem={listActiveItem}
+                  history={props.history}
                 />
               )}
               {activeSidebarItem === listActiveSidebarItem.uangSaya && (
