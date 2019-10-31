@@ -22,7 +22,7 @@ export default function InputJumlah(props) {
         type="number"
         value={value}
         onChange={(event, { value }) => changeValue(value)}
-        min="1"
+        min="0"
       />
 
       {isTouched() && (

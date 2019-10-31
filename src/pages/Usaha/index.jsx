@@ -13,7 +13,10 @@ import {
 } from 'semantic-ui-react'
 import { UserContext } from '../../App'
 import axios from 'axios'
+import CardTabs from './CardTabs'
 import ProdukSaya from './ProdukSaya'
+import PesananSayaUsaha from './PesananSayaUsaha'
+import ProductCard from '../Beranda/ProductCard'
 import PenghasilanSaya from './PenghasilanSaya'
 
 function Usaha(props) {
@@ -22,7 +25,10 @@ function Usaha(props) {
   const [usaha, setUsaha] = useState()
   const [loading, setLoading] = useState(false)
 
-  const [activeItem, setActiveItem] = useState()
+  const [activeItem, setActiveItem] = useState(listActiveItem.pesananSaya)
+  // const [activeItemPesanan, setActiveItemPesanan] = useState(
+  //   listActiveItemPesanan,
+  // )
 
   useEffect(() => {
     setLoading(false)
@@ -63,6 +69,7 @@ function Usaha(props) {
       return false
     }
   }
+
   return (
     <Container style={styles.marginCard}>
       <Segment>
@@ -98,29 +105,56 @@ function Usaha(props) {
           </Grid>
         )}
       </Segment>
-      <Grid columns={2} style={styles.marginGrid}>
-        <Grid.Column width="3">
-          <SidebarDashboardUsaha
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-          />
-        </Grid.Column>
-        <Grid.Column width="11" style={styles.marginColumn}>
-          {/* {activeItem === listActiveItem.pesananSaya && <PesananSaya />} */}
-          {activeItem === listActiveItem.produkSaya && (
-            <ProdukSaya
-              location={props.location}
+      {!doesHaveSameUsahaId() && (
+        <React.Fragment>
+          <Divider horizontal>Produk Usaha</Divider>
+          {doesHaveSameUsahaId() && (
+            <Link to={{ pathname: '/tambahproduk' }}>
+              <Button color="green" icon style={styles.marginDivider}>
+                <Icon name="plus"></Icon> Tambah Produk
+              </Button>
+            </Link>
+          )}
+          <Grid columns={5}>
+            {usaha && (
+              <Grid.Row>
+                {usaha.produks.map(produk => (
+                  <Grid.Column style={styles.cardRow} key={produk.id_produk}>
+                    <Link to={{ pathname: '/detail-produk', state: produk }}>
+                      <ProductCard name={produk.nama} price={produk.harga} />
+                    </Link>
+                  </Grid.Column>
+                ))}
+              </Grid.Row>
+            )}
+          </Grid>
+        </React.Fragment>
+      )}
+      {doesHaveSameUsahaId() && [
+        <Grid columns={2} style={styles.marginGrid}>
+          <Grid.Column width="3">
+            <SidebarDashboardUsaha
+              activeItem={activeItem}
+              setActiveItem={setActiveItem}
               history={props.history}
-              usaha={usaha}
-              doesHaveSameUsahaId={doesHaveSameUsahaId}
             />
-          )}
-          {activeItem === listActiveItem.tambahProduk && (
-            <Link to={{ pathname: '/tambahproduk' }} />
-          )}
-          {activeItem === listActiveItem.penghasilanSaya && <PenghasilanSaya />}
-        </Grid.Column>
-      </Grid>
+          </Grid.Column>
+          <Grid.Column width="13">
+            {activeItem === listActiveItem.pesananSaya && <PesananSayaUsaha />}
+            {activeItem === listActiveItem.produkSaya && (
+              <ProdukSaya
+                location={props.location}
+                history={props.history}
+                usaha={usaha}
+                doesHaveSameUsahaId={doesHaveSameUsahaId}
+              />
+            )}
+            {activeItem === listActiveItem.penghasilanSaya && (
+              <PenghasilanSaya />
+            )}
+          </Grid.Column>
+        </Grid>,
+      ]}
     </Container>
   )
 }

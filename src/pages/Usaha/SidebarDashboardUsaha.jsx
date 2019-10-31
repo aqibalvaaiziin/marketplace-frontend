@@ -13,8 +13,12 @@ export const listActiveItem = {
 function SidebarDashboardUsaha(props) {
   const context = useContext(UserContext)
 
+  function tambahProduk() {
+    props.history.push('/tambahproduk')
+  }
+
   return (
-    <Menu vertical>
+    <Menu vertical fluid>
       <Menu.Item>
         <Menu.Header>Pesanan</Menu.Header>
         <Menu.Menu>
@@ -33,11 +37,7 @@ function SidebarDashboardUsaha(props) {
             active={props.activeItem === listActiveItem.produkSaya}
             onClick={event => props.setActiveItem(listActiveItem.produkSaya)}
           />
-          <Menu.Item
-            name="Tambah Produk"
-            active={props.activeItem === listActiveItem.tambahProduk}
-            onClick={event => props.setActiveItem(listActiveItem.tambahProduk)}
-          />
+          <Menu.Item name="Tambah Produk" onClick={() => tambahProduk()} />
         </Menu.Menu>
       </Menu.Item>
       <Menu.Item>

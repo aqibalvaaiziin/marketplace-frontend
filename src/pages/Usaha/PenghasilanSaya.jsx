@@ -1,18 +1,13 @@
 import React from 'react'
-import { Grid } from 'semantic-ui-react'
+import { Grid, Segment } from 'semantic-ui-react'
 
 function PenghasilanSaya() {
   return (
     <React.Fragment>
-      {/* <Grid>
-        <Grid.Row>
-          <Grid columns={2}>
-            <Grid.column width="5"></Grid.column>
-            <Grid.column width="9"></Grid.column>
-          </Grid>
-        </Grid.Row>
-        <Grid.Row></Grid.Row>
-      </Grid> */}
+      <Segment>
+        <Grid.Row>AAA</Grid.Row>
+        <Grid.Row>AAA</Grid.Row>
+      </Segment>
     </React.Fragment>
   )
 }
