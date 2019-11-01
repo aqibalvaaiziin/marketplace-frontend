@@ -160,7 +160,6 @@ function PesananSayaContainer(props) {
           <Header as="h2">Transaksi Kosong</Header>
         </Container>
       )}
-      }
     </div>
   )
 }

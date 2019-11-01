@@ -20,6 +20,42 @@ function Profil(props) {
   )
 
   const [kumpulanTransaksi, setKumpulanTransaksi] = useState([])
+  const [selectedTransaksi, setselectedTransaksi] = useState([])
+
+  function setActiveItemData(item) {
+    setActiveItem(item)
+    const transactions = kumpulanTransaksi
+    switch (item) {
+      case listActiveItem.semua:
+        setselectedTransaksi(transactions)
+        break
+      case listActiveItem.belumBayar:
+        setselectedTransaksi(
+          transactions.filter(transaction => !transaction.konfirmasi),
+        )
+        break
+      case listActiveItem.dikemas:
+        setselectedTransaksi(
+          transactions.filter(transaction => transaction.konfirmasi),
+        )
+        break
+      case listActiveItem.dikirim:
+        setselectedTransaksi(
+          transactions.filter(transaction => transaction.konfirmasi),
+        )
+        break
+      case listActiveItem.selesai:
+        setselectedTransaksi(
+          transactions.filter(transaction => transaction.konfirmasi),
+        )
+        break
+      case listActiveItem.dibatalkan:
+        setselectedTransaksi(
+          transactions.filter(transaction => !transaction.konfirmasi),
+        )
+        break
+    }
+  }
 
   useEffect(() => {
     setLoading(true)
@@ -34,7 +70,7 @@ function Profil(props) {
             })
             .then(res => {
               setKumpulanTransaksi(res.data)
-              console.log(res.data)
+              setselectedTransaksi(res.data)
               setLoading(false)
             })
         })
@@ -70,8 +106,8 @@ function Profil(props) {
               )}
               {activeSidebarItem === listActiveSidebarItem.pesananSaya && (
                 <PesananSayaContainer
-                  kumpulanTransaksi={kumpulanTransaksi}
-                  setActiveItem={setActiveItem}
+                  kumpulanTransaksi={selectedTransaksi}
+                  setActiveItem={setActiveItemData}
                   activeItem={activeItem}
                   listActiveItem={listActiveItem}
                   history={props.history}
