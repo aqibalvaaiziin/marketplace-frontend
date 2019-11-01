@@ -18,7 +18,7 @@ function SidebarDashboardUsaha(props) {
   }
 
   return (
-    <Menu vertical>
+    <Menu vertical fluid>
       <Menu.Item>
         <Menu.Header>Pesanan</Menu.Header>
         <Menu.Menu>
@@ -43,7 +43,13 @@ function SidebarDashboardUsaha(props) {
       <Menu.Item>
         <Menu.Header>Keuangan</Menu.Header>
         <Menu.Menu>
-          <Menu.Item name="Penghasilan Saya" />
+          <Menu.Item
+            name="Penghasilan Saya"
+            active={props.activeItem === listActiveItem.penghasilanSaya}
+            onClick={event =>
+              props.setActiveItem(listActiveItem.penghasilanSaya)
+            }
+          />
           <Menu.Item name="Saldo Saya" />
         </Menu.Menu>
       </Menu.Item>
