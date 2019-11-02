@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import CardLogTransaksi from './CardLogTransaksi'
 import axios from 'axios'
 import { Header, Container } from 'semantic-ui-react'
-import { UserContext } from '../../App'
+import { UserContext, HOSTNAME } from '../../App'
 
 function LogTransaksi(props) {
   const context = useContext(UserContext)
@@ -10,7 +10,7 @@ function LogTransaksi(props) {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/transaksi', {
+      .get(`${HOSTNAME}/transaksi`, {
         headers: { Authorization: `Bearer ${context.token}` },
       })
       .then(res => setKumpulanTransaksi(res.data))
@@ -50,7 +50,7 @@ function LogTransaksi(props) {
           )
         })
       ) : (
-        <Container style={styles.marginCard}> 
+        <Container style={styles.marginCard}>
           <Header as="h2">Transaksi Kosong</Header>
         </Container>
       )}

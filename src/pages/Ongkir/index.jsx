@@ -10,11 +10,13 @@ import {
   Grid,
   Input,
 } from 'semantic-ui-react'
-import { UserContext } from '../../App'
+import { UserContext, HOSTNAME } from '../../App'
 
 export default function Ongkir(props) {
-  
-  if (props.location.state.totalBerat === 0 || props.location.state.totalBerat === 0) {
+  if (
+    props.location.state.totalBerat === 0 ||
+    props.location.state.totalBerat === 0
+  ) {
     props.history.push('/keranjang')
   }
 
@@ -24,9 +26,9 @@ export default function Ongkir(props) {
   const [kumpulanKota, setKumpulanKota] = useState([])
   const [idKota, setIdKota] = useState()
   const [idProvinsi, setIdProvinsi] = useState()
-  const [detailAlamat, setDetailAlamat] = useState("")
+  const [detailAlamat, setDetailAlamat] = useState('')
   const [ongkos, setOngkos] = useState()
-  const [kotaTujuan, setKotaTujuan] = useState("")
+  const [kotaTujuan, setKotaTujuan] = useState('')
   const [error, setError] = useState(false)
 
   const optionProvinsi = kumpulanProvinsi.map(provinsi => ({
@@ -51,28 +53,26 @@ export default function Ongkir(props) {
 
   function getProvinsi() {
     axios
-      .get('http://localhost:8000/provinsi')
+      .get(`${HOSTNAME}/provinsi`)
       .then(response => setKumpulanProvinsi(response.data))
   }
 
   function getKota(e, { value }) {
     setIdProvinsi(value)
-    axios
-      .get(`http://localhost:8000/provinsi/${value}/kota`)
-      .then(response => {
-        setKumpulanKota(response.data)
-      })
+    axios.get(`${HOSTNAME}/provinsi/${value}/kota`).then(response => {
+      setKumpulanKota(response.data)
+    })
   }
 
   function getSelectedKota(e, { value }) {
-    const kota = kumpulanKota.find((town) => town.id_kota == value)
+    const kota = kumpulanKota.find(town => town.id_kota == value)
     setKotaTujuan(`${kota.tipe} ${kota.kota}`)
     setIdKota(value)
   }
 
   function hitungOngkir() {
     axios
-      .post('http://localhost:8000/ongkir', {
+      .post(`${HOSTNAME}/ongkir`, {
         kota_asal: props.location.state.kotaAsal,
         kota_tujuan: idKota,
         berat: props.location.state.totalBerat,
@@ -91,7 +91,7 @@ export default function Ongkir(props) {
   function bayar(id) {
     axios
       .post(
-        'http://localhost:8000/transaksi',
+        `${HOSTNAME}/transaksi`,
         {
           id_usaha: id,
           id_keranjang: props.location.state.idKeranjang,
@@ -100,7 +100,7 @@ export default function Ongkir(props) {
           kota_tujuan: idKota,
           detail_alamat: detailAlamat,
           nama_kota_asal: props.location.state.namaKotaAsal,
-          nama_kota_tujuan: kotaTujuan
+          nama_kota_tujuan: kotaTujuan,
         },
         { headers: { Authorization: `Bearer ${context.token}` } },
       )
@@ -169,7 +169,9 @@ export default function Ongkir(props) {
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
-                  <Button primary onClick={bayar.bind(this, props.location.state.idUsaha)}>
+                  <Button
+                    primary
+                    onClick={bayar.bind(this, props.location.state.idUsaha)}>
                     Bayar
                   </Button>
                 </Grid.Column>

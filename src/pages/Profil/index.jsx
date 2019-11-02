@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
-import { UserContext } from '../../App'
+import { UserContext, HOSTNAME } from '../../App'
 import axios from 'axios'
 import SidebarProfil, { listActiveSidebarItem } from './SidebarProfil'
 import { listActiveItem } from './NavPesananSaya'
@@ -62,10 +62,10 @@ function Profil(props) {
     if (!props.location.state) {
       if (context.getPengguna()) {
         idPengguna = context.getPengguna().id_pengguna
-        axios.get(`http://localhost:8000/pengguna/${idPengguna}`).then(res => {
+        axios.get(`${HOSTNAME}/pengguna/${idPengguna}`).then(res => {
           setPengguna(res.data)
           axios
-            .get('http://localhost:8000/transaksi', {
+            .get(`${HOSTNAME}/transaksi`, {
               headers: { Authorization: `Bearer ${context.token}` },
             })
             .then(res => {
@@ -79,9 +79,7 @@ function Profil(props) {
       }
     } else {
       axios
-        .get(
-          `http://localhost:8000/pengguna/${props.location.state.id_pengguna}`,
-        )
+        .get(`${HOSTNAME}/pengguna/${props.location.state.id_pengguna}`)
         .then(res => {
           setPengguna(res.data)
           setLoading(false)

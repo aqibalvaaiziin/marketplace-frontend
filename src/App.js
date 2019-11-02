@@ -100,7 +100,7 @@ const routes = [
     name: 'usaha',
     label: 'Usaha',
     private: true,
-    hide: true
+    hide: true,
   },
   {
     path: '/tambahproduk',
@@ -117,10 +117,11 @@ const routes = [
     label: 'DaftarAnggota',
     hide: true,
     private: true,
-  }
+  },
 ]
 
 export const UserContext = React.createContext()
+export const HOSTNAME = 'http://localhost:8000'
 
 function App() {
   const [activeRoute, setActiveRoute] = useState(window.location.pathname)
@@ -159,13 +160,13 @@ function App() {
           key={route.name}
         />
       ) : (
-          <Route
-            path={route.path}
-            exact
-            component={route.component}
-            key={route.name}
-          />
-        ),
+        <Route
+          path={route.path}
+          exact
+          component={route.component}
+          key={route.name}
+        />
+      ),
     )
   }
 
@@ -179,7 +180,7 @@ function App() {
               name={route.name}
               active={isActive(route)}
               onClick={(e, { name }) => setActiveRoute(name)}>
-                {route.label}
+              {route.label}
             </Menu.Item>
           </Link>
         ),
@@ -202,13 +203,11 @@ function App() {
           <Menu.Item>
             <Menu.Item>
               <Link to="/" onClick={() => setActiveRoute('/')}>
-                <Header size='medium'>Marketplace Koperasi</Header>
+                <Header size="medium">Marketplace Koperasi</Header>
               </Link>
             </Menu.Item>
           </Menu.Item>
-          <Menu.Item>
-            {renderMenuItems()}
-          </Menu.Item>
+          <Menu.Item>{renderMenuItems()}</Menu.Item>
           <Menu.Menu position="right">
             <Menu.Item>
               {isLoggedIn() ? (
@@ -216,36 +215,33 @@ function App() {
                   <Menu.Item>
                     <Input size="large" icon="search" placeholder="Search..." />
                   </Menu.Item>
-                    <Menu.Item
-                      name="shopping cart">
-                      <Link to="/keranjang" style={{color:"#000"}}>
-                        <Icon name="shopping cart" />
+                  <Menu.Item name="shopping cart">
+                    <Link to="/keranjang" style={{ color: '#000' }}>
+                      <Icon name="shopping cart" />
+                    </Link>
+                  </Menu.Item>
+                  {getPengguna().usaha && (
+                    <Menu.Item>
+                      <Link to="/usaha" style={{ color: '#000' }}>
+                        Usaha
                       </Link>
                     </Menu.Item>
-                    {
-                      (getPengguna().usaha) && (
-                        <Menu.Item>
-                          <Link to="/usaha" style={{color:"#000"}}>
-                            Usaha
-                          </Link>
-                        </Menu.Item>
-                      )
-                    }
-                    <Menu.Item>
-                        <UserDropdown />
-                    </Menu.Item>
+                  )}
+                  <Menu.Item>
+                    <UserDropdown />
+                  </Menu.Item>
                 </>
               ) : (
-                  <Link to="/masuk">
-                    <Button content="Masuk" color="green" />
-                  </Link>
-                )}
+                <Link to="/masuk">
+                  <Button content="Masuk" color="green" />
+                </Link>
+              )}
             </Menu.Item>
           </Menu.Menu>
         </Menu>
 
         {renderRoutes()}
-        <Footer/>
+        <Footer />
       </BrowserRouter>
     </UserContext.Provider>
   )

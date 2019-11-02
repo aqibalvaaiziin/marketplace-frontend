@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Input, Header, Icon, Button, Form, Card } from 'semantic-ui-react'
-import { UserContext } from '../../App'
+import { UserContext, HOSTNAME } from '../../App'
 import axios from 'axios'
 
 function Daftar(props) {
@@ -19,7 +19,7 @@ function Daftar(props) {
   function register() {
     const { konfirmasi_password, ...rest } = input
     axios
-      .post('http://localhost:8000/pengguna', rest)
+      .post(`${HOSTNAME}/pengguna`, rest)
       .then(response => props.history.push('/masuk'))
   }
 

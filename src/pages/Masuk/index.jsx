@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Input, Header, Icon, Button, Card, Form } from 'semantic-ui-react'
-import { UserContext } from '../../App'
+import { UserContext, HOSTNAME } from '../../App'
 import axios from 'axios'
 
 function Masuk(props) {
@@ -20,17 +20,15 @@ function Masuk(props) {
   }
 
   function login() {
-    axios
-      .post('http://localhost:8000/pengguna/login', input)
-      .then(res => {
-        if (res.data.success) {
-          context.login(res.data.token)
-          props.history.push('/')
-        } else {
-          resetValue()
-          alert('Username atau password anda salah')
-        }
-      })
+    axios.post(`${HOSTNAME}/pengguna/login`, input).then(res => {
+      if (res.data.success) {
+        context.login(res.data.token)
+        props.history.push('/')
+      } else {
+        resetValue()
+        alert('Username atau password anda salah')
+      }
+    })
   }
 
   if (context.isLoggedIn()) {

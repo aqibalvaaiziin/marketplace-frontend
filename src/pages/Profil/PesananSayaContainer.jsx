@@ -116,42 +116,6 @@ function PesananSayaContainer(props) {
                   }
                 />
               )}
-              {props.activeItem === props.listActiveItem.dibatalkan && (
-                <CardLogTransaksi
-                  idTransaksi={transaksi.id_transaksi}
-                  kotaAsal={transaksi.nama_kota_asal}
-                  tujuan={transaksi.nama_kota_tujuan}
-                  detailAlamat={transaksi.detail_alamat}
-                  tanggal={`${date}-${month}-${year} ${hour}:${minutes}`}
-                  totalBerat={transaksi.total_berat}
-                  totalTransaksi={transaksi.total_harga}
-                  ongkir={transaksi.ongkir}
-                  buktiBayar={transaksi.bukti_bayar}
-                  onDetailButtonClick={() =>
-                    props.history.push({
-                      pathname: '/transaksi/detail',
-                      state: transaksi.id_transaksi,
-                    })
-                  }
-                />
-              )}
-              <CardLogTransaksi
-                idTransaksi={transaksi.id_transaksi}
-                kotaAsal={transaksi.nama_kota_asal}
-                tujuan={transaksi.nama_kota_tujuan}
-                detailAlamat={transaksi.detail_alamat}
-                tanggal={`${date}-${month}-${year} ${hour}:${minutes}`}
-                totalBerat={transaksi.total_berat}
-                totalTransaksi={transaksi.total_harga}
-                ongkir={transaksi.ongkir}
-                buktiBayar={transaksi.bukti_bayar}
-                onDetailButtonClick={() =>
-                  props.history.push({
-                    pathname: '/transaksi/detail',
-                    state: transaksi.id_transaksi,
-                  })
-                }
-              />
             </Container>
           )
         })

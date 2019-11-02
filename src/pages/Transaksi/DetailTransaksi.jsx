@@ -9,7 +9,7 @@ import {
   Button,
 } from 'semantic-ui-react'
 import axios from 'axios'
-import { UserContext } from '../../App'
+import { UserContext, HOSTNAME } from '../../App'
 
 function DetailTransaksi(props) {
   const context = useContext(UserContext)
@@ -18,10 +18,9 @@ function DetailTransaksi(props) {
 
   useEffect(() => {
     axios
-      .get(
-        `http://localhost:8000/transaksi/${props.location.state}/detail`,
-        { headers: { Authorization: `Bearer ${context.token}` } },
-      )
+      .get(`${HOSTNAME}/transaksi/${props.location.state}/detail`, {
+        headers: { Authorization: `Bearer ${context.token}` },
+      })
       .then(res => setKumpulanDetailTransaksi(res.data))
   })
 
@@ -29,16 +28,12 @@ function DetailTransaksi(props) {
     const fd = new FormData()
     fd.append('bukti_bayar', selectedFile)
     axios
-      .put(
-        `http://localhost:8000/transaksi/${props.location.state}`,
-        fd,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${context.token}`,
-          },
+      .put(`${HOSTNAME}/transaksi/${props.location.state}`, fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${context.token}`,
         },
-      )
+      })
       .then(() => {
         document.getElementById('input-bukti').value = ''
         setSelectedFile(null)
