@@ -75,8 +75,8 @@ function Usaha(props) {
       <Segment>
         {usaha && loading && (
           <Grid divided columns={2}>
-            <Grid.Column width="2">
-              <Image src="https://placeimg.com/120/120/any" fluid />
+            <Grid.Column width="2" textAlign="center" verticalAlign="middle">
+              <Icon name="warehouse" size="huge" />
             </Grid.Column>
             <Grid.Column width="14">
               <Grid celled="internally" columns={2}>
@@ -130,7 +130,7 @@ function Usaha(props) {
           </Grid>
         </React.Fragment>
       )}
-      {doesHaveSameUsahaId() && [
+      {doesHaveSameUsahaId() && (
         <Grid columns={2} style={styles.marginGrid}>
           <Grid.Column width="3">
             <SidebarDashboardUsaha
@@ -153,8 +153,8 @@ function Usaha(props) {
               <PenghasilanSaya />
             )}
           </Grid.Column>
-        </Grid>,
-      ]}
+        </Grid>
+      )}
     </Container>
   )
 }

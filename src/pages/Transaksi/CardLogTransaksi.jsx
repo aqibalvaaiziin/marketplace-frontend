@@ -119,19 +119,11 @@ function CardLogTransaksi(props) {
           <Accordion.Content active={activeIndex === 3}>
             <Grid columns={2} divided verticalAlign="middle" textAlign="center">
               <Grid.Row>
-                <Grid.Column width={7}>
+                <Grid.Column width={12}>
                   <Header>
                     <Icon name="shipping fast" />
                     <Header.Content style={styles.h2}>
-                      123sadasddasdadaasd
-                    </Header.Content>
-                  </Header>
-                </Grid.Column>
-                <Grid.Column width={5}>
-                  <Header>
-                    <Header.Content>
-                      <Header.Subheader>Penerima :</Header.Subheader>
-                      dataPenerima
+                      No Resi: No Resi Anda
                     </Header.Content>
                   </Header>
                 </Grid.Column>
