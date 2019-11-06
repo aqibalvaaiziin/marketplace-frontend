@@ -8,7 +8,6 @@ export const listActiveItemPesanan = {
   belumBayar: 'Belum Bayar',
   perluDikirim: 'Perlu Dikirim',
   dikirim: 'Dikirim',
-  selesai: 'Selesai',
 }
 
 function CardTabs(props) {
@@ -17,7 +16,7 @@ function CardTabs(props) {
       <Grid columns={16}>
         <Grid.Row>
           <Grid.Column width="16">
-            <Menu pointing secondary fluid widths={5}>
+            <Menu pointing secondary fluid widths={4}>
               <Menu.Item
                 name="Semua Pesanan"
                 active={
@@ -54,31 +53,22 @@ function CardTabs(props) {
                   props.setActiveItemPesanan(listActiveItemPesanan.dikirim)
                 }
               />
-              <Menu.Item
-                name="Selesai"
-                active={
-                  props.activeItemPesanan === listActiveItemPesanan.selesai
-                }
-                onClick={event =>
-                  props.setActiveItemPesanan(listActiveItemPesanan.selesai)
-                }
-              />
             </Menu>
           </Grid.Column>
         </Grid.Row>
         {props.kumpulanTransaksi.length != 0 ? (
           <>
             {props.activeItemPesanan === listActiveItemPesanan.semuaPesanan && (
-              <LogTransaksiUsaha kumpulanTransaksi={props.kumpulanTransaksi} />
+              <LogTransaksiUsaha kirimResi={props.kirimResi} history={props.history} kumpulanTransaksi={props.kumpulanTransaksi} />
             )}
             {props.activeItemPesanan === listActiveItemPesanan.belumBayar && (
-              <LogTransaksiUsaha kumpulanTransaksi={props.kumpulanTransaksi} />
+              <LogTransaksiUsaha kirimResi={props.kirimResi} history={props.history} kumpulanTransaksi={props.kumpulanTransaksi} />
             )}
             {props.activeItemPesanan === listActiveItemPesanan.perluDikirim && (
-              <LogTransaksiUsaha kumpulanTransaksi={props.kumpulanTransaksi} />
+              <LogTransaksiUsaha kirimResi={props.kirimResi} history={props.history} kumpulanTransaksi={props.kumpulanTransaksi} />
             )}
-            {props.activeItemPesanan === listActiveItemPesanan.selesai && (
-              <LogTransaksiUsaha kumpulanTransaksi={props.kumpulanTransaksi} />
+            {props.activeItemPesanan === listActiveItemPesanan.dikirim && (
+              <LogTransaksiUsaha kirimResi={props.kirimResi} history={props.history} kumpulanTransaksi={props.kumpulanTransaksi} />
             )}
           </>
         ) : (

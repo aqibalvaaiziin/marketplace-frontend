@@ -11,6 +11,7 @@ import {
 
 function CardLogTransaksi(props) {
   const [activeIndex, setActiveIndex] = useState(null)
+  console.log(props)
 
   function handleClick(event, titleProps) {
     const { index } = titleProps
@@ -98,7 +99,9 @@ function CardLogTransaksi(props) {
               </div>
             </div>
           </Accordion.Content>
+          {
 
+          }
           <Accordion.Title
             active={activeIndex === 2}
             index={2}
